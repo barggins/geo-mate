@@ -1,0 +1,6 @@
+
+ALTER TABLE public.rides
+  ADD COLUMN origin_lat DOUBLE PRECISION,
+  ADD COLUMN origin_lng DOUBLE PRECISION,
+  ADD COLUMN destination_lat DOUBLE PRECISION,
+  ADD COLUMN destination_lng DOUBLE PRECISION;
