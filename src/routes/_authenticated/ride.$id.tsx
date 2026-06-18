@@ -108,13 +108,13 @@ function RidePage() {
             </div>
             {driver && (
               <div className="mt-4 flex items-center gap-3">
-                <Link to="/profile/$id" params={{ id: driver.id }} className="flex items-center gap-3">
+                <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 font-bold">{driver.name?.[0]}</div>
                   <div>
                     <p className="text-sm font-medium">{driver.name} {driver.verified && <Badge variant="secondary" className="ml-1 text-[10px]">Verified</Badge>}</p>
                     <p className="text-xs opacity-80"><Star className="mr-1 inline h-3 w-3 fill-current" />{Number(driver.rating ?? 5).toFixed(1)} · {driver.rating_count ?? 0} reviews</p>
                   </div>
-                </Link>
+                </div>
               </div>
             )}
           </div>
