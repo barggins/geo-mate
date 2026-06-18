@@ -55,6 +55,8 @@ function PostRide() {
       destination_label: destination.label,
       origin: pointToWKT(origin),
       destination: pointToWKT(destination),
+      origin_lat: origin.lat, origin_lng: origin.lng,
+      destination_lat: destination.lat, destination_lng: destination.lng,
       route_line: r ? coordsToWKT(r.coords) : null,
       depart_at: new Date(departAt).toISOString(),
       seats_total: seats,

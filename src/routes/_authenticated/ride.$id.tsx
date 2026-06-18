@@ -232,46 +232,23 @@ function RidePage() {
 }
 
 function RideMap({ ride, liveLoc }: { ride: any; liveLoc: { lat: number; lng: number } | null }) {
-  // route_line is a PostGIS geography — we re-derive direct line from origin/destination labels using a quick fetch
-  const [polyline, setPolyline] = useState<Array<[number, number]> | undefined>();
-  useEffect(() => {
-    // origin/destination are returned as WKT or hex; we approximate by skipping polyline and showing markers if not available.
-    setPolyline(undefined);
-  }, [ride.id]);
-
-  // We use the origin/destination from RPC labels — fetch lat/lng via parsing isn't available client-side easily.
-  // Use the ride's stored coords by selecting them as text:
-  const [pts, setPts] = useState<{ origin?: [number, number]; destination?: [number, number] }>({});
-  useEffect(() => {
-    supabase
-      .rpc("search_rides", { pickup_lat: 0, pickup_lng: 0, dropoff_lat: 0, dropoff_lng: 0, radius_m: 0 })
-      .then(() => {});
-    supabase
-      .from("rides")
-      .select("id, origin_text:origin, destination_text:destination")
-      .eq("id", ride.id)
-      .single()
-      .then(({ data }) => {
-        if (!data) return;
-        const parse = (s: any): [number, number] | undefined => {
-          if (!s) return;
-          // PostGIS geography returns hex EWKB - we can't parse client-side easily.
-          // Fall back to nothing; the live driver location will dominate the view.
-          return undefined;
-        };
-        setPts({ origin: parse(data.origin_text), destination: parse(data.destination_text) });
-      });
-  }, [ride.id]);
+  const origin: [number, number] | null =
+    ride.origin_lat != null && ride.origin_lng != null ? [ride.origin_lat, ride.origin_lng] : null;
+  const destination: [number, number] | null =
+    ride.destination_lat != null && ride.destination_lng != null ? [ride.destination_lat, ride.destination_lng] : null;
 
   const markers = [
-    ...(pts.origin ? [{ position: pts.origin }] : []),
-    ...(pts.destination ? [{ position: pts.destination, icon: pickupIcon }] : []),
+    ...(origin ? [{ position: origin }] : []),
+    ...(destination ? [{ position: destination, icon: pickupIcon }] : []),
     ...(liveLoc ? [{ position: [liveLoc.lat, liveLoc.lng] as [number, number], icon: carIcon }] : []),
   ];
 
+  const polyline: Array<[number, number]> | undefined =
+    origin && destination ? [origin, destination] : undefined;
+
   return (
     <LeafletMap
-      center={liveLoc ? [liveLoc.lat, liveLoc.lng] : pts.origin ?? [51.5074, -0.1278]}
+      center={liveLoc ? [liveLoc.lat, liveLoc.lng] : origin ?? [51.5074, -0.1278]}
       markers={markers}
       polyline={polyline}
       height="460px"
