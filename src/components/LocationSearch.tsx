@@ -16,7 +16,7 @@ export function LocationSearch({
   const [opts, setOpts] = useState<GeocodeResult[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const debounce = useRef<NodeJS.Timeout>();
+  const debounce = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => { setQ(value?.label ?? ""); }, [value]);
 

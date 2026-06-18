@@ -226,11 +226,15 @@ export type Database = {
           depart_at: string
           destination: unknown
           destination_label: string
+          destination_lat: number | null
+          destination_lng: number | null
           driver_id: string
           id: string
           notes: string | null
           origin: unknown
           origin_label: string
+          origin_lat: number | null
+          origin_lng: number | null
           price_per_seat: number
           route_line: unknown
           seats_left: number
@@ -242,11 +246,15 @@ export type Database = {
           depart_at: string
           destination: unknown
           destination_label: string
+          destination_lat?: number | null
+          destination_lng?: number | null
           driver_id: string
           id?: string
           notes?: string | null
           origin: unknown
           origin_label: string
+          origin_lat?: number | null
+          origin_lng?: number | null
           price_per_seat?: number
           route_line?: unknown
           seats_left: number
@@ -258,11 +266,15 @@ export type Database = {
           depart_at?: string
           destination?: unknown
           destination_label?: string
+          destination_lat?: number | null
+          destination_lng?: number | null
           driver_id?: string
           id?: string
           notes?: string | null
           origin?: unknown
           origin_label?: string
+          origin_lat?: number | null
+          origin_lng?: number | null
           price_per_seat?: number
           route_line?: unknown
           seats_left?: number
