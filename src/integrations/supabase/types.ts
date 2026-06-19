@@ -557,6 +557,7 @@ export type Database = {
             }
             Returns: string
           }
+      claim_first_admin: { Args: never; Returns: boolean }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:
         | {
