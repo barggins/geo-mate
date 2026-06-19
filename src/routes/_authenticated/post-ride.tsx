@@ -108,7 +108,7 @@ function PostRide() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="price">Suggested contribution per seat (£)</Label>
+              <Label htmlFor="price">Suggested contribution per seat (R)</Label>
               <Input id="price" type="number" min={0} step="0.5" value={price} onChange={(e) => setPrice(parseFloat(e.target.value) || 0)} />
             </div>
             <div className="space-y-1.5">

@@ -102,7 +102,7 @@ function RidePage() {
               </div>
               <div className="flex flex-wrap gap-2">
                 <Badge className="bg-white/20 text-white"><Users className="mr-1 h-3 w-3" />{ride.seats_left}/{ride.seats_total} seats</Badge>
-                <Badge className="bg-white/20 text-white">£{Number(ride.price_per_seat).toFixed(2)}</Badge>
+                <Badge className="bg-white/20 text-white">R{Number(ride.price_per_seat).toFixed(2)}</Badge>
                 <Badge className="bg-white text-[color:var(--brand-blue)]">{ride.status}</Badge>
               </div>
             </div>

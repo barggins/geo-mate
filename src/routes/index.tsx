@@ -170,9 +170,9 @@ function Landing() {
           </div>
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {[
-              { tag: "Free", name: "Basic", price: "£0", features: ["Post up to 2 rides/month", "Request up to 5 rides/month", "Basic profile", "In-app messaging"] },
-              { tag: "Most popular", name: "Commuter Pro", price: "£4.99", popular: true, features: ["Unlimited ride posts", "Unlimited ride requests", "Priority matching", "Recurring/daily rides", "Verified badge", "Advanced filters"] },
-              { tag: "Business", name: "Team", price: "£12", features: ["Everything in Pro", "Company domain matching", "Admin dashboard", "Bulk seat bookings", "SSO login", "HR reporting exports"] },
+              { tag: "Free", name: "Basic", price: "R0", features: ["Post up to 2 rides/month", "Request up to 5 rides/month", "Basic profile", "In-app messaging"] },
+              { tag: "Most popular", name: "Commuter Pro", price: "R99", popular: true, features: ["Unlimited ride posts", "Unlimited ride requests", "Priority matching", "Recurring/daily rides", "Verified badge", "Advanced filters"] },
+              { tag: "Business", name: "Team", price: "R249", features: ["Everything in Pro", "Company domain matching", "Admin dashboard", "Bulk seat bookings", "SSO login", "HR reporting exports"] },
             ].map((p) => (
               <Card key={p.name} className={`relative p-6 ${p.popular ? "border-2 border-[color:var(--brand-blue)] shadow-lg" : ""}`}>
                 <Badge variant={p.popular ? "default" : "secondary"} className={p.popular ? "brand-gradient text-white" : ""}>
