@@ -83,7 +83,7 @@ function Search() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <p className="truncate font-semibold">{r.origin_label.split(",")[0]} → {r.destination_label.split(",")[0]}</p>
-                        <Badge className="brand-gradient text-white">£{Number(r.price_per_seat).toFixed(2)}</Badge>
+                        <Badge className="brand-gradient text-white">R{Number(r.price_per_seat).toFixed(2)}</Badge>
                       </div>
                       <p className="text-xs text-muted-foreground">{r.driver_name} · ⭐ {Number(r.driver_rating).toFixed(1)}</p>
                       <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
