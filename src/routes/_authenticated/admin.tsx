@@ -23,7 +23,13 @@ function AdminPage() {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
+      let { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
+      if (!data) {
+        // Bootstrap: first signed-in user becomes admin (no-op if one already exists)
+        await supabase.rpc("claim_first_admin");
+        const res = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
+        data = res.data;
+      }
       setIsAdmin(!!data);
       if (data) {
         const { data: rows } = await supabase
