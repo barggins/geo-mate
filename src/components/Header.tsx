@@ -33,6 +33,9 @@ export function Header() {
               <Button variant="ghost" asChild>
                 <Link to="/post-ride"><Plus className="mr-2 h-4 w-4" />Post a ride</Link>
               </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/rides-log">Log</Link>
+              </Button>
             </>
           )}
         </nav>

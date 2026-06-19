@@ -173,6 +173,41 @@ export type Database = {
           },
         ]
       }
+      ride_log: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          details: Json | null
+          event: string
+          id: string
+          ride_id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          details?: Json | null
+          event: string
+          id?: string
+          ride_id: string
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          details?: Json | null
+          event?: string
+          id?: string
+          ride_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ride_log_ride_id_fkey"
+            columns: ["ride_id"]
+            isOneToOne: false
+            referencedRelation: "rides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ride_requests: {
         Row: {
           created_at: string
@@ -304,6 +339,27 @@ export type Database = {
           proj4text?: string | null
           srid?: number
           srtext?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -501,6 +557,7 @@ export type Database = {
             }
             Returns: string
           }
+      claim_first_admin: { Args: never; Returns: boolean }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:
         | {
@@ -633,6 +690,13 @@ export type Database = {
       }
       geomfromewkt: { Args: { "": string }; Returns: unknown }
       gettransactionid: { Args: never; Returns: unknown }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       longtransactionsenabled: { Args: never; Returns: boolean }
       populate_geometry_columns:
         | { Args: { tbl_oid: unknown; use_typmod?: boolean }; Returns: number }
@@ -1294,6 +1358,7 @@ export type Database = {
       }
     }
     Enums: {
+      app_role: "admin" | "user"
       request_status: "pending" | "accepted" | "rejected" | "cancelled"
       ride_status: "scheduled" | "in_progress" | "completed" | "cancelled"
     }
@@ -1431,6 +1496,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "user"],
       request_status: ["pending", "accepted", "rejected", "cancelled"],
       ride_status: ["scheduled", "in_progress", "completed", "cancelled"],
     },
