@@ -318,6 +318,53 @@ export type Database = {
         }
         Relationships: []
       }
+      sos_alerts: {
+        Row: {
+          created_at: string
+          id: string
+          lat: number | null
+          lng: number | null
+          note: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          ride_id: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          ride_id?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          ride_id?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sos_alerts_ride_id_fkey"
+            columns: ["ride_id"]
+            isOneToOne: false
+            referencedRelation: "rides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       spatial_ref_sys: {
         Row: {
           auth_name: string | null
@@ -339,6 +386,36 @@ export type Database = {
           proj4text?: string | null
           srid?: number
           srtext?: string | null
+        }
+        Relationships: []
+      }
+      user_locations: {
+        Row: {
+          heading: number | null
+          lat: number
+          lng: number
+          sharing: boolean
+          speed_kmh: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          heading?: number | null
+          lat: number
+          lng: number
+          sharing?: boolean
+          speed_kmh?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          heading?: number | null
+          lat?: number
+          lng?: number
+          sharing?: boolean
+          speed_kmh?: number | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
