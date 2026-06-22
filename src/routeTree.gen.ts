@@ -12,10 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedSosRouteImport } from './routes/_authenticated/sos'
 import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedRidesLogRouteImport } from './routes/_authenticated/rides-log'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPostRideRouteImport } from './routes/_authenticated/post-ride'
+import { Route as AuthenticatedLiveMapRouteImport } from './routes/_authenticated/live-map'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedRideIdRouteImport } from './routes/_authenticated/ride.$id'
@@ -33,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedSosRoute = AuthenticatedSosRouteImport.update({
+  id: '/sos',
+  path: '/sos',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
   id: '/search',
@@ -52,6 +59,11 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
 const AuthenticatedPostRideRoute = AuthenticatedPostRideRouteImport.update({
   id: '/post-ride',
   path: '/post-ride',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedLiveMapRoute = AuthenticatedLiveMapRouteImport.update({
+  id: '/live-map',
+  path: '/live-map',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -75,10 +87,12 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/live-map': typeof AuthenticatedLiveMapRoute
   '/post-ride': typeof AuthenticatedPostRideRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/rides-log': typeof AuthenticatedRidesLogRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/sos': typeof AuthenticatedSosRoute
   '/ride/$id': typeof AuthenticatedRideIdRoute
 }
 export interface FileRoutesByTo {
@@ -86,10 +100,12 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/live-map': typeof AuthenticatedLiveMapRoute
   '/post-ride': typeof AuthenticatedPostRideRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/rides-log': typeof AuthenticatedRidesLogRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/sos': typeof AuthenticatedSosRoute
   '/ride/$id': typeof AuthenticatedRideIdRoute
 }
 export interface FileRoutesById {
@@ -99,10 +115,12 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/live-map': typeof AuthenticatedLiveMapRoute
   '/_authenticated/post-ride': typeof AuthenticatedPostRideRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/rides-log': typeof AuthenticatedRidesLogRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
+  '/_authenticated/sos': typeof AuthenticatedSosRoute
   '/_authenticated/ride/$id': typeof AuthenticatedRideIdRoute
 }
 export interface FileRouteTypes {
@@ -112,10 +130,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/admin'
     | '/dashboard'
+    | '/live-map'
     | '/post-ride'
     | '/profile'
     | '/rides-log'
     | '/search'
+    | '/sos'
     | '/ride/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -123,10 +143,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/admin'
     | '/dashboard'
+    | '/live-map'
     | '/post-ride'
     | '/profile'
     | '/rides-log'
     | '/search'
+    | '/sos'
     | '/ride/$id'
   id:
     | '__root__'
@@ -135,10 +157,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
+    | '/_authenticated/live-map'
     | '/_authenticated/post-ride'
     | '/_authenticated/profile'
     | '/_authenticated/rides-log'
     | '/_authenticated/search'
+    | '/_authenticated/sos'
     | '/_authenticated/ride/$id'
   fileRoutesById: FileRoutesById
 }
@@ -171,6 +195,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/sos': {
+      id: '/_authenticated/sos'
+      path: '/sos'
+      fullPath: '/sos'
+      preLoaderRoute: typeof AuthenticatedSosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/search': {
       id: '/_authenticated/search'
       path: '/search'
@@ -197,6 +228,13 @@ declare module '@tanstack/react-router' {
       path: '/post-ride'
       fullPath: '/post-ride'
       preLoaderRoute: typeof AuthenticatedPostRideRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/live-map': {
+      id: '/_authenticated/live-map'
+      path: '/live-map'
+      fullPath: '/live-map'
+      preLoaderRoute: typeof AuthenticatedLiveMapRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
@@ -226,20 +264,24 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedLiveMapRoute: typeof AuthenticatedLiveMapRoute
   AuthenticatedPostRideRoute: typeof AuthenticatedPostRideRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedRidesLogRoute: typeof AuthenticatedRidesLogRoute
   AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
+  AuthenticatedSosRoute: typeof AuthenticatedSosRoute
   AuthenticatedRideIdRoute: typeof AuthenticatedRideIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedLiveMapRoute: AuthenticatedLiveMapRoute,
   AuthenticatedPostRideRoute: AuthenticatedPostRideRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedRidesLogRoute: AuthenticatedRidesLogRoute,
   AuthenticatedSearchRoute: AuthenticatedSearchRoute,
+  AuthenticatedSosRoute: AuthenticatedSosRoute,
   AuthenticatedRideIdRoute: AuthenticatedRideIdRoute,
 }
 
