@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Logo } from "./Logo";
 import { Button } from "./ui/button";
 import { useAuth } from "@/lib/auth";
-import { LogOut, Menu, Search, Plus, LayoutDashboard, User as UserIcon } from "lucide-react";
+import { LogOut, Menu, Search, Plus, LayoutDashboard, User as UserIcon, MapPin, AlertTriangle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +32,12 @@ export function Header() {
               </Button>
               <Button variant="ghost" asChild>
                 <Link to="/post-ride"><Plus className="mr-2 h-4 w-4" />Post a ride</Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/live-map"><MapPin className="mr-2 h-4 w-4" />Live map</Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/sos"><AlertTriangle className="mr-2 h-4 w-4 text-red-600" />SOS</Link>
               </Button>
               <Button variant="ghost" asChild>
                 <Link to="/rides-log">Log</Link>
@@ -82,6 +88,8 @@ export function Header() {
                 <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>Dashboard</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/search" })}>Find a ride</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/post-ride" })}>Post a ride</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/live-map" })}>Live map</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/sos" })}>SOS alerts</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
