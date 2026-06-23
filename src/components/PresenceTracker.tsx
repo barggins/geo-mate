@@ -3,56 +3,95 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 
 const STORAGE_KEY = "liftclub.share_location";
+const MIN_DISTANCE_M = 25;     // only upload when moved more than this
+const MIN_INTERVAL_MS = 15_000; // ...or after this much time has passed
 
-/** Returns whether the current user is broadcasting their live location. */
+function haversine(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
+  const R = 6371000;
+  const toRad = (x: number) => (x * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const s =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(s));
+}
+
+/** Whether the current user is broadcasting their live location. */
 export function useLocationSharing() {
   const { user } = useAuth();
   const [sharing, setSharing] = useState<boolean>(false);
   const watchRef = useRef<number | null>(null);
+  const lastSentRef = useRef<{ lat: number; lng: number; t: number } | null>(null);
 
-  // Load preference
   useEffect(() => {
     if (typeof window === "undefined") return;
     setSharing(window.localStorage.getItem(STORAGE_KEY) === "1");
   }, []);
 
-  // Drive geolocation watch
   useEffect(() => {
     if (!user) return;
-    if (!sharing) {
+
+    const stop = () => {
       if (watchRef.current != null) navigator.geolocation.clearWatch(watchRef.current);
       watchRef.current = null;
-      // mark as not sharing in DB
+    };
+
+    if (!sharing) {
+      stop();
       supabase
         .from("user_locations")
         .update({ sharing: false, updated_at: new Date().toISOString() })
         .eq("user_id", user.id);
       return;
     }
-    if (!("geolocation" in navigator)) return;
+    if (typeof navigator === "undefined" || !("geolocation" in navigator)) return;
 
-    watchRef.current = navigator.geolocation.watchPosition(
-      async (pos) => {
-        await supabase.from("user_locations").upsert(
-          {
-            user_id: user.id,
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            heading: pos.coords.heading ?? null,
-            speed_kmh: pos.coords.speed != null ? pos.coords.speed * 3.6 : null,
-            sharing: true,
-            updated_at: new Date().toISOString(),
-          },
-          { onConflict: "user_id" },
-        );
-      },
-      () => {},
-      { enableHighAccuracy: true, maximumAge: 5_000, timeout: 15_000 },
-    );
+    const start = () => {
+      if (watchRef.current != null) return;
+      watchRef.current = navigator.geolocation.watchPosition(
+        async (pos) => {
+          // Pause while tab is hidden to save battery
+          if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
+
+          const now = Date.now();
+          const here = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          const last = lastSentRef.current;
+          if (last) {
+            const moved = haversine(last, here);
+            const elapsed = now - last.t;
+            if (moved < MIN_DISTANCE_M && elapsed < MIN_INTERVAL_MS) return;
+          }
+          lastSentRef.current = { ...here, t: now };
+
+          await supabase.from("user_locations").upsert(
+            {
+              user_id: user.id,
+              lat: here.lat,
+              lng: here.lng,
+              heading: pos.coords.heading ?? null,
+              speed_kmh: pos.coords.speed != null ? pos.coords.speed * 3.6 : null,
+              sharing: true,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: "user_id" },
+          );
+        },
+        () => {},
+        { enableHighAccuracy: true, maximumAge: 10_000, timeout: 20_000 },
+      );
+    };
+
+    const onVis = () => {
+      if (document.visibilityState === "hidden") stop();
+      else start();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    start();
 
     return () => {
-      if (watchRef.current != null) navigator.geolocation.clearWatch(watchRef.current);
-      watchRef.current = null;
+      document.removeEventListener("visibilitychange", onVis);
+      stop();
     };
   }, [user, sharing]);
 
@@ -67,7 +106,6 @@ export function useLocationSharing() {
   return { sharing, toggle };
 }
 
-/** Mount-only invisible component to keep the watch alive across pages. */
 export function PresenceTracker() {
   useLocationSharing();
   return null;
