@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      device_tokens: {
+        Row: {
+          created_at: string
+          id: string
+          last_seen_at: string
+          platform: string
+          token: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_seen_at?: string
+          platform?: string
+          token: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_seen_at?: string
+          platform?: string
+          token?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       locations: {
         Row: {
           driver_id: string
@@ -86,6 +116,96 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notification_prefs: {
+        Row: {
+          events_chat: boolean
+          events_request_decision: boolean
+          events_ride_request: boolean
+          events_ride_status: boolean
+          events_sos: boolean
+          in_app_enabled: boolean
+          phone_e164: string | null
+          push_enabled: boolean
+          sms_enabled: boolean
+          updated_at: string
+          user_id: string
+          whatsapp_enabled: boolean
+        }
+        Insert: {
+          events_chat?: boolean
+          events_request_decision?: boolean
+          events_ride_request?: boolean
+          events_ride_status?: boolean
+          events_sos?: boolean
+          in_app_enabled?: boolean
+          phone_e164?: string | null
+          push_enabled?: boolean
+          sms_enabled?: boolean
+          updated_at?: string
+          user_id: string
+          whatsapp_enabled?: boolean
+        }
+        Update: {
+          events_chat?: boolean
+          events_request_decision?: boolean
+          events_ride_request?: boolean
+          events_ride_status?: boolean
+          events_sos?: boolean
+          in_app_enabled?: boolean
+          phone_e164?: string | null
+          push_enabled?: boolean
+          sms_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+          whatsapp_enabled?: boolean
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          data: Json | null
+          delivered_push: boolean
+          delivered_sms: boolean
+          delivered_whatsapp: boolean
+          id: string
+          link: string | null
+          read_at: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          data?: Json | null
+          delivered_push?: boolean
+          delivered_sms?: boolean
+          delivered_whatsapp?: boolean
+          id?: string
+          link?: string | null
+          read_at?: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          data?: Json | null
+          delivered_push?: boolean
+          delivered_sms?: boolean
+          delivered_whatsapp?: boolean
+          id?: string
+          link?: string | null
+          read_at?: string | null
+          title?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -667,6 +787,17 @@ export type Database = {
         | { Args: { schema_name: string; table_name: string }; Returns: string }
         | { Args: { table_name: string }; Returns: string }
       enablelongtransactions: { Args: never; Returns: string }
+      enqueue_notification: {
+        Args: {
+          p_body: string
+          p_data: Json
+          p_link: string
+          p_title: string
+          p_type: Database["public"]["Enums"]["notification_type"]
+          p_user: string
+        }
+        Returns: string
+      }
       equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
       geometry: { Args: { "": string }; Returns: unknown }
       geometry_above: {
@@ -1436,6 +1567,16 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      notification_channel: "in_app" | "push" | "sms" | "whatsapp"
+      notification_type:
+        | "ride_request"
+        | "request_accepted"
+        | "request_rejected"
+        | "sos_alert"
+        | "chat_message"
+        | "ride_cancelled"
+        | "ride_started"
+        | "ride_completed"
       request_status: "pending" | "accepted" | "rejected" | "cancelled"
       ride_status: "scheduled" | "in_progress" | "completed" | "cancelled"
     }
@@ -1574,6 +1715,17 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      notification_channel: ["in_app", "push", "sms", "whatsapp"],
+      notification_type: [
+        "ride_request",
+        "request_accepted",
+        "request_rejected",
+        "sos_alert",
+        "chat_message",
+        "ride_cancelled",
+        "ride_started",
+        "ride_completed",
+      ],
       request_status: ["pending", "accepted", "rejected", "cancelled"],
       ride_status: ["scheduled", "in_progress", "completed", "cancelled"],
     },

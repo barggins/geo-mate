@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Logo } from "./Logo";
 import { Button } from "./ui/button";
 import { useAuth } from "@/lib/auth";
-import { LogOut, Menu, Search, Plus, LayoutDashboard, User as UserIcon, MapPin, AlertTriangle } from "lucide-react";
+import { LogOut, Menu, Search, Plus, LayoutDashboard, User as UserIcon, MapPin, AlertTriangle, Settings as SettingsIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { NotificationBell } from "./NotificationBell";
 
 export function Header() {
   const { user, signOut } = useAuth();
@@ -47,28 +48,34 @@ export function Header() {
         </nav>
         <div className="flex items-center gap-2">
           {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon"><UserIcon className="h-4 w-4" /></Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem onClick={() => navigate({ to: "/profile" })}>
-                  <UserIcon className="mr-2 h-4 w-4" />Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>
-                  <LayoutDashboard className="mr-2 h-4 w-4" />Dashboard
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={async () => {
-                    await signOut();
-                    navigate({ to: "/" });
-                  }}
-                >
-                  <LogOut className="mr-2 h-4 w-4" />Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <>
+              <NotificationBell />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon"><UserIcon className="h-4 w-4" /></Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={() => navigate({ to: "/profile" })}>
+                    <UserIcon className="mr-2 h-4 w-4" />Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>
+                    <LayoutDashboard className="mr-2 h-4 w-4" />Dashboard
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate({ to: "/settings" })}>
+                    <SettingsIcon className="mr-2 h-4 w-4" />Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={async () => {
+                      await signOut();
+                      navigate({ to: "/" });
+                    }}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           ) : (
             <>
               <Button variant="ghost" asChild>

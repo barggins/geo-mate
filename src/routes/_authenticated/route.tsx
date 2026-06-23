@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { EmergencyButton } from "@/components/EmergencyButton";
 import { PresenceTracker } from "@/components/PresenceTracker";
+import { FirstLoginLocationPrompt } from "@/components/FirstLoginLocationPrompt";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/_authenticated")({
   component: () => (
     <>
       <PresenceTracker />
+      <FirstLoginLocationPrompt />
       <Outlet />
       <EmergencyButton />
     </>
