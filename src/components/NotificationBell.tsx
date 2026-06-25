@@ -6,10 +6,34 @@ import { useNotifications } from "@/lib/notifications";
 import { useNavigate } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useRef } from "react";
+import { showBrowserNotification } from "@/lib/browser-notify";
 
 export function NotificationBell() {
   const { items, unread, markRead, markAllRead, refresh } = useNotifications();
   const navigate = useNavigate();
+  const seenIds = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    // Initialize seen set on first load so we don't notify for backlog.
+    if (seenIds.current.size === 0 && items.length > 0) {
+      items.forEach((i) => seenIds.current.add(i.id));
+      return;
+    }
+    const hidden = typeof document !== "undefined" && document.visibilityState !== "visible";
+    for (const n of items) {
+      if (seenIds.current.has(n.id)) continue;
+      seenIds.current.add(n.id);
+      if (hidden && !n.read_at) {
+        showBrowserNotification(n.title, {
+          body: n.body ?? undefined,
+          link: n.link ?? undefined,
+          tag: n.id,
+        });
+      }
+    }
+  }, [items]);
+
 
   return (
     <Popover>
