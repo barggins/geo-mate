@@ -6,6 +6,8 @@ import { useNotifications } from "@/lib/notifications";
 import { useNavigate } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useRef } from "react";
+import { showBrowserNotification } from "@/lib/browser-notify";
 
 export function NotificationBell() {
   const { items, unread, markRead, markAllRead, refresh } = useNotifications();
