@@ -14,36 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      device_tokens: {
-        Row: {
-          created_at: string
-          id: string
-          last_seen_at: string
-          platform: string
-          token: string
-          user_agent: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          last_seen_at?: string
-          platform?: string
-          token: string
-          user_agent?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          last_seen_at?: string
-          platform?: string
-          token?: string
-          user_agent?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
       locations: {
         Row: {
           driver_id: string
@@ -119,46 +89,37 @@ export type Database = {
       }
       notification_prefs: {
         Row: {
+          browser_enabled: boolean
           events_chat: boolean
           events_request_decision: boolean
           events_ride_request: boolean
           events_ride_status: boolean
           events_sos: boolean
           in_app_enabled: boolean
-          phone_e164: string | null
-          push_enabled: boolean
-          sms_enabled: boolean
           updated_at: string
           user_id: string
-          whatsapp_enabled: boolean
         }
         Insert: {
+          browser_enabled?: boolean
           events_chat?: boolean
           events_request_decision?: boolean
           events_ride_request?: boolean
           events_ride_status?: boolean
           events_sos?: boolean
           in_app_enabled?: boolean
-          phone_e164?: string | null
-          push_enabled?: boolean
-          sms_enabled?: boolean
           updated_at?: string
           user_id: string
-          whatsapp_enabled?: boolean
         }
         Update: {
+          browser_enabled?: boolean
           events_chat?: boolean
           events_request_decision?: boolean
           events_ride_request?: boolean
           events_ride_status?: boolean
           events_sos?: boolean
           in_app_enabled?: boolean
-          phone_e164?: string | null
-          push_enabled?: boolean
-          sms_enabled?: boolean
           updated_at?: string
           user_id?: string
-          whatsapp_enabled?: boolean
         }
         Relationships: []
       }
