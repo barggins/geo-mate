@@ -33,14 +33,12 @@ export function LocationSearch({
             setQ(v);
             if (value) onChange(null);
             if (debounce.current) clearTimeout(debounce.current);
-            if (v.length < 3) { setOpts([]); return; }
+            if (v.length < 3) { setOpts([]); setOpen(false); return; }
             setLoading(true);
             debounce.current = setTimeout(async () => {
               const r = await geocode(v);
               setOpts(r); setOpen(r.length > 0); setLoading(false);
-              // Auto-select the top match so the form is usable even if
-              // the user doesn't click a suggestion.
-              if (r.length > 0) onChange(r[0]);
+              // Suggestions only — user must click one to confirm.
             }, 350);
           }}
           onFocus={() => opts.length > 0 && setOpen(true)}
