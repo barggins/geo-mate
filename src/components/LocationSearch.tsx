@@ -37,7 +37,10 @@ export function LocationSearch({
             setLoading(true);
             debounce.current = setTimeout(async () => {
               const r = await geocode(v);
-              setOpts(r); setOpen(true); setLoading(false);
+              setOpts(r); setOpen(r.length > 0); setLoading(false);
+              // Auto-select the top match so the form is usable even if
+              // the user doesn't click a suggestion.
+              if (r.length > 0) onChange(r[0]);
             }, 350);
           }}
           onFocus={() => opts.length > 0 && setOpen(true)}
