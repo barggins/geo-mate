@@ -87,9 +87,7 @@ function Search() {
               <Link key={r.id} to="/ride/$id" params={{ id: r.id }}>
                 <Card className="p-4 transition-shadow hover:shadow-md">
                   <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full brand-gradient text-lg font-bold text-white">
-                      {(r.driver_name ?? "?")[0]?.toUpperCase()}
-                    </div>
+                    <AvatarImg path={r.driver_photo} name={r.driver_name} size={48} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <p className="truncate font-semibold">{r.origin_label.split(",")[0]} → {r.destination_label.split(",")[0]}</p>
