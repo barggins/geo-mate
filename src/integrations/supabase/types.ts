@@ -924,6 +924,7 @@ export type Database = {
       }
       postgis_version: { Args: never; Returns: string }
       postgis_wagyu_version: { Args: never; Returns: string }
+      recompute_user_rating: { Args: { _uid: string }; Returns: undefined }
       search_rides: {
         Args: {
           dropoff_lat: number
