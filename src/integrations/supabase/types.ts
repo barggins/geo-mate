@@ -523,6 +523,54 @@ export type Database = {
       }
     }
     Views: {
+      admin_profiles_full: {
+        Row: {
+          bio: string | null
+          created_at: string | null
+          employer: string | null
+          home_address: string | null
+          id: string | null
+          name: string | null
+          phone: string | null
+          photo_url: string | null
+          rating: number | null
+          rating_count: number | null
+          updated_at: string | null
+          verified: boolean | null
+          work_address: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string | null
+          employer?: string | null
+          home_address?: string | null
+          id?: string | null
+          name?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          rating?: number | null
+          rating_count?: number | null
+          updated_at?: string | null
+          verified?: boolean | null
+          work_address?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string | null
+          employer?: string | null
+          home_address?: string | null
+          id?: string | null
+          name?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          rating?: number | null
+          rating_count?: number | null
+          updated_at?: string | null
+          verified?: boolean | null
+          work_address?: string | null
+        }
+        Relationships: []
+      }
       geography_columns: {
         Row: {
           coord_dimension: number | null
@@ -562,6 +610,27 @@ export type Database = {
           f_table_schema?: unknown
           srid?: number | null
           type?: string | null
+        }
+        Relationships: []
+      }
+      my_profile_private: {
+        Row: {
+          home_address: string | null
+          id: string | null
+          phone: string | null
+          work_address: string | null
+        }
+        Insert: {
+          home_address?: string | null
+          id?: string | null
+          phone?: string | null
+          work_address?: string | null
+        }
+        Update: {
+          home_address?: string | null
+          id?: string | null
+          phone?: string | null
+          work_address?: string | null
         }
         Relationships: []
       }
@@ -715,7 +784,6 @@ export type Database = {
             }
             Returns: string
           }
-      claim_first_admin: { Args: never; Returns: boolean }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:
         | {
