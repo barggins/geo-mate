@@ -168,51 +168,69 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_private: {
+        Row: {
+          created_at: string
+          home_address: string | null
+          phone: string | null
+          updated_at: string
+          user_id: string
+          work_address: string | null
+        }
+        Insert: {
+          created_at?: string
+          home_address?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+          work_address?: string | null
+        }
+        Update: {
+          created_at?: string
+          home_address?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+          work_address?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           bio: string | null
           created_at: string
           employer: string | null
-          home_address: string | null
           id: string
           name: string | null
-          phone: string | null
           photo_url: string | null
           rating: number
           rating_count: number
           updated_at: string
           verified: boolean
-          work_address: string | null
         }
         Insert: {
           bio?: string | null
           created_at?: string
           employer?: string | null
-          home_address?: string | null
           id: string
           name?: string | null
-          phone?: string | null
           photo_url?: string | null
           rating?: number
           rating_count?: number
           updated_at?: string
           verified?: boolean
-          work_address?: string | null
         }
         Update: {
           bio?: string | null
           created_at?: string
           employer?: string | null
-          home_address?: string | null
           id?: string
           name?: string | null
-          phone?: string | null
           photo_url?: string | null
           rating?: number
           rating_count?: number
           updated_at?: string
           verified?: boolean
-          work_address?: string | null
         }
         Relationships: []
       }
@@ -715,7 +733,6 @@ export type Database = {
             }
             Returns: string
           }
-      claim_first_admin: { Args: never; Returns: boolean }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:
         | {
