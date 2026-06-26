@@ -46,7 +46,8 @@ function Search() {
     });
     setLoading(false);
     if (error) { toast.error(error.message); return; }
-    setResults(data ?? []);
+    const sorted = [...(data ?? [])].sort((a, b) => scoreRide(b) - scoreRide(a));
+    setResults(sorted);
     if (!data?.length) toast.message("No rides match yet — try widening the radius.");
   };
 
