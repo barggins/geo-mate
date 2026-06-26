@@ -21,11 +21,12 @@ function SosPage() {
   const load = async () => {
     const { data } = await supabase
       .from("sos_alerts")
-      .select("*, profiles!sos_alerts_user_id_fkey(name, phone)")
+      .select("*, profiles!sos_alerts_user_id_fkey(name), profile_private!sos_alerts_user_id_fkey(phone)")
       .order("created_at", { ascending: false })
       .limit(100);
     setAlerts(data ?? []);
   };
+
 
   useEffect(() => {
     if (!user) return;
@@ -62,11 +63,12 @@ function SosPage() {
                 <div>
                   <p className="font-semibold">
                     {a.profiles?.name ?? "Member"}
-                    {a.profiles?.phone && (
+                    {a.profile_private?.phone && (
                       <span className="ml-2 text-xs text-muted-foreground">
-                        · {a.profiles.phone}
+                        · {a.profile_private.phone}
                       </span>
                     )}
+
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {format(new Date(a.created_at), "EEE d MMM, HH:mm:ss")}
