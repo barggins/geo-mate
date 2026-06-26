@@ -9,12 +9,21 @@ import { Badge } from "@/components/ui/badge";
 import { LocationSearch } from "@/components/LocationSearch";
 import { ClientOnly } from "@/components/ClientOnly";
 import LeafletMap from "@/components/LeafletMap";
+import { AvatarImg } from "@/components/AvatarImg";
 import { supabase } from "@/integrations/supabase/client";
 import type { GeocodeResult } from "@/lib/geo";
 import { formatDistance } from "@/lib/geo";
 import { toast } from "sonner";
 import { Loader2, Search as SearchIcon, Star, Users, Clock } from "lucide-react";
 import { format } from "date-fns";
+
+// Weighted match score: rating dominates, light penalty for detour + late departures.
+function scoreRide(r: any) {
+  const rating = Number(r.driver_rating ?? 0); // 0–5
+  const detourKm = ((Number(r.pickup_distance_m ?? 0) + Number(r.dropoff_distance_m ?? 0)) / 1000);
+  const hours = Math.max(0, (new Date(r.depart_at).getTime() - Date.now()) / 3600000);
+  return rating * 1.0 - detourKm * 0.05 - Math.min(hours, 72) * 0.01;
+}
 
 export const Route = createFileRoute("/_authenticated/search")({
   component: Search,
@@ -37,7 +46,8 @@ function Search() {
     });
     setLoading(false);
     if (error) { toast.error(error.message); return; }
-    setResults(data ?? []);
+    const sorted = [...(data ?? [])].sort((a, b) => scoreRide(b) - scoreRide(a));
+    setResults(sorted);
     if (!data?.length) toast.message("No rides match yet — try widening the radius.");
   };
 
@@ -77,9 +87,7 @@ function Search() {
               <Link key={r.id} to="/ride/$id" params={{ id: r.id }}>
                 <Card className="p-4 transition-shadow hover:shadow-md">
                   <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full brand-gradient text-lg font-bold text-white">
-                      {(r.driver_name ?? "?")[0]?.toUpperCase()}
-                    </div>
+                    <AvatarImg path={r.driver_photo} name={r.driver_name} size={48} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <p className="truncate font-semibold">{r.origin_label.split(",")[0]} → {r.destination_label.split(",")[0]}</p>
