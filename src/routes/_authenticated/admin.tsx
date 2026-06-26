@@ -23,24 +23,19 @@ function AdminPage() {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      let { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
-      if (!data) {
-        // Bootstrap: first signed-in user becomes admin (no-op if one already exists)
-        await supabase.rpc("claim_first_admin");
-        const res = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
-        data = res.data;
-      }
+      const { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
       setIsAdmin(!!data);
       if (data) {
         const { data: rows } = await supabase
           .from("profiles")
-          .select("*")
+          .select("*, profile_private(phone, home_address, work_address)")
           .order("created_at", { ascending: false })
           .limit(200);
         setProfiles(rows ?? []);
       }
     })();
   }, [user]);
+
 
   if (isAdmin === null) {
     return <div className="flex min-h-screen items-center justify-center"><Loader2 className="h-5 w-5 animate-spin" /></div>;
@@ -58,8 +53,9 @@ function AdminPage() {
   }
 
   const filtered = profiles.filter((p) =>
-    !q ? true : [p.name, p.email, p.employer, p.phone].some((v) => String(v ?? "").toLowerCase().includes(q.toLowerCase())),
+    !q ? true : [p.name, p.employer, p.profile_private?.phone].some((v) => String(v ?? "").toLowerCase().includes(q.toLowerCase())),
   );
+
 
   async function toggleVerified(p: any) {
     const { error } = await supabase.from("profiles").update({ verified: !p.verified }).eq("id", p.id);
@@ -95,7 +91,7 @@ function AdminPage() {
                   <p className="font-medium">{p.name ?? "Unnamed"}</p>
                   {p.verified ? <Badge className="bg-[color:var(--brand-green)] text-white">Verified</Badge> : <Badge variant="secondary">Unverified</Badge>}
                 </div>
-                <p className="text-xs text-muted-foreground">{p.email} · {p.phone ?? "no phone"} · {p.employer ?? "no employer"}</p>
+                <p className="text-xs text-muted-foreground">{p.profile_private?.phone ?? "no phone"} · {p.employer ?? "no employer"}</p>
                 {p.bio && <p className="mt-1 text-sm text-muted-foreground">{p.bio}</p>}
               </div>
               <Button variant={p.verified ? "outline" : "default"} className={p.verified ? "" : "brand-gradient text-white"} onClick={() => toggleVerified(p)}>
