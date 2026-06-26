@@ -9,12 +9,21 @@ import { Badge } from "@/components/ui/badge";
 import { LocationSearch } from "@/components/LocationSearch";
 import { ClientOnly } from "@/components/ClientOnly";
 import LeafletMap from "@/components/LeafletMap";
+import { AvatarImg } from "@/components/AvatarImg";
 import { supabase } from "@/integrations/supabase/client";
 import type { GeocodeResult } from "@/lib/geo";
 import { formatDistance } from "@/lib/geo";
 import { toast } from "sonner";
 import { Loader2, Search as SearchIcon, Star, Users, Clock } from "lucide-react";
 import { format } from "date-fns";
+
+// Weighted match score: rating dominates, light penalty for detour + late departures.
+function scoreRide(r: any) {
+  const rating = Number(r.driver_rating ?? 0); // 0–5
+  const detourKm = ((Number(r.pickup_distance_m ?? 0) + Number(r.dropoff_distance_m ?? 0)) / 1000);
+  const hours = Math.max(0, (new Date(r.depart_at).getTime() - Date.now()) / 3600000);
+  return rating * 1.0 - detourKm * 0.05 - Math.min(hours, 72) * 0.01;
+}
 
 export const Route = createFileRoute("/_authenticated/search")({
   component: Search,
