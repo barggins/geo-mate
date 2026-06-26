@@ -21,11 +21,19 @@ function SosPage() {
   const load = async () => {
     const { data } = await supabase
       .from("sos_alerts")
-      .select("*, profiles!sos_alerts_user_id_fkey(name), profile_private!sos_alerts_user_id_fkey(phone)")
+      .select("*, profiles!sos_alerts_user_id_fkey(name)")
       .order("created_at", { ascending: false })
       .limit(100);
-    setAlerts(data ?? []);
+    const rows = data ?? [];
+    const ids = Array.from(new Set(rows.map((r: any) => r.user_id)));
+    if (ids.length) {
+      const { data: priv } = await supabase.from("profile_private").select("user_id, phone").in("user_id", ids);
+      const map = new Map((priv ?? []).map((p: any) => [p.user_id, p.phone]));
+      rows.forEach((r: any) => { r.phone = map.get(r.user_id) ?? null; });
+    }
+    setAlerts(rows);
   };
+
 
 
   useEffect(() => {
@@ -63,11 +71,12 @@ function SosPage() {
                 <div>
                   <p className="font-semibold">
                     {a.profiles?.name ?? "Member"}
-                    {a.profile_private?.phone && (
+                    {a.phone && (
                       <span className="ml-2 text-xs text-muted-foreground">
-                        · {a.profile_private.phone}
+                        · {a.phone}
                       </span>
                     )}
+
 
                   </p>
                   <p className="text-xs text-muted-foreground">
