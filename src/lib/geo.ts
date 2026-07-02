@@ -9,14 +9,30 @@ export type GeocodeResult = {
   lng: number;
 };
 
+// South Africa bounding box (roughly): west,south,east,north
+const ZA_VIEWBOX = "16.45,-34.85,32.95,-22.10";
+
 export async function geocode(query: string): Promise<GeocodeResult[]> {
   if (!query.trim()) return [];
-  const url = `https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(query)}`;
+  const url = `https://nominatim.openstreetmap.org/search?format=json&limit=5&countrycodes=za&bounded=1&viewbox=${ZA_VIEWBOX}&q=${encodeURIComponent(query)}`;
   const r = await fetch(url, { headers: { "Accept-Language": "en" } });
   if (!r.ok) return [];
   const json = (await r.json()) as Array<{ display_name: string; lat: string; lon: string }>;
   return json.map((x) => ({ label: x.display_name, lat: parseFloat(x.lat), lng: parseFloat(x.lon) }));
 }
+
+/** Reverse geocode a coordinate to a human label (South Africa focus). */
+export async function reverseGeocode(lat: number, lng: number): Promise<GeocodeResult | null> {
+  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16`;
+  const r = await fetch(url, { headers: { "Accept-Language": "en" } });
+  if (!r.ok) return null;
+  const j = await r.json();
+  if (!j?.display_name) return null;
+  return { label: j.display_name, lat, lng };
+}
+
+/** Default map center: Johannesburg, South Africa. */
+export const ZA_DEFAULT_CENTER: [number, number] = [-26.2041, 28.0473];
 
 export type Route = {
   /** [lng, lat] pairs along the route */
