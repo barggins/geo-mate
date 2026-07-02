@@ -12,9 +12,9 @@ import LeafletMap from "@/components/LeafletMap";
 import { AvatarImg } from "@/components/AvatarImg";
 import { supabase } from "@/integrations/supabase/client";
 import type { GeocodeResult } from "@/lib/geo";
-import { formatDistance } from "@/lib/geo";
+import { formatDistance, reverseGeocode, ZA_DEFAULT_CENTER } from "@/lib/geo";
 import { toast } from "sonner";
-import { Loader2, Search as SearchIcon, Star, Users, Clock } from "lucide-react";
+import { Loader2, Search as SearchIcon, Star, Users, Clock, Crosshair } from "lucide-react";
 import { format } from "date-fns";
 
 // Weighted match score: rating dominates, light penalty for detour + late departures.
@@ -32,9 +32,26 @@ export const Route = createFileRoute("/_authenticated/search")({
 function Search() {
   const [pickup, setPickup] = useState<GeocodeResult | null>(null);
   const [dropoff, setDropoff] = useState<GeocodeResult | null>(null);
-  const [radius, setRadius] = useState(3);
+  const [radius, setRadius] = useState(10);
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [locating, setLocating] = useState(false);
+
+  const useMyLocation = () => {
+    if (!navigator.geolocation) { toast.error("Geolocation not supported"); return; }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const rev = await reverseGeocode(latitude, longitude);
+        setPickup(rev ?? { label: `My location (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`, lat: latitude, lng: longitude });
+        setLocating(false);
+        toast.success("Pickup set to your current location");
+      },
+      (err) => { setLocating(false); toast.error(err.message || "Couldn't get your location"); },
+      { enableHighAccuracy: true, timeout: 10_000 },
+    );
+  };
 
   const runSearch = async () => {
     if (!pickup || !dropoff) { toast.error("Pick both pickup and dropoff"); return; }
@@ -60,16 +77,22 @@ function Search() {
 
         <Card className="mt-6 grid gap-3 p-5 md:grid-cols-[1fr_1fr_auto_auto]">
           <div className="space-y-1.5">
-            <Label>Pickup</Label>
-            <LocationSearch value={pickup} onChange={setPickup} placeholder="Where are you starting?" />
+            <div className="flex items-center justify-between">
+              <Label>Pickup</Label>
+              <Button type="button" variant="ghost" size="sm" onClick={useMyLocation} disabled={locating} className="h-6 gap-1 px-2 text-xs">
+                {locating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Crosshair className="h-3 w-3" />}
+                Use my location
+              </Button>
+            </div>
+            <LocationSearch value={pickup} onChange={setPickup} placeholder="Where are you starting? (South Africa)" />
           </div>
           <div className="space-y-1.5">
             <Label>Dropoff</Label>
-            <LocationSearch value={dropoff} onChange={setDropoff} placeholder="Where are you going?" />
+            <LocationSearch value={dropoff} onChange={setDropoff} placeholder="Where are you going? (South Africa)" />
           </div>
           <div className="space-y-1.5">
             <Label>Radius (km)</Label>
-            <Input type="number" min={1} max={20} value={radius} onChange={(e) => setRadius(parseInt(e.target.value) || 3)} className="w-24" />
+            <Input type="number" min={1} max={100} value={radius} onChange={(e) => setRadius(parseInt(e.target.value) || 10)} className="w-24" />
           </div>
           <div className="flex items-end">
             <Button onClick={runSearch} disabled={loading} className="brand-gradient text-white">
@@ -109,7 +132,7 @@ function Search() {
           <div className="lg:sticky lg:top-20 lg:self-start">
             <ClientOnly fallback={<div className="h-[420px] rounded-xl border bg-muted" />}>
               <LeafletMap
-                center={pickup ? [pickup.lat, pickup.lng] : [51.5074, -0.1278]}
+                center={pickup ? [pickup.lat, pickup.lng] : [-26.2041, 28.0473]}
                 markers={[
                   ...(pickup ? [{ position: [pickup.lat, pickup.lng] as [number, number] }] : []),
                   ...(dropoff ? [{ position: [dropoff.lat, dropoff.lng] as [number, number] }] : []),
