@@ -109,7 +109,7 @@ function SignUpForm() {
         });
         setBusy(false);
         if (error) toast.error(error.message);
-        else toast.success("Account created — check your email if confirmation is required.");
+        else toast.success("Account created! Check your inbox and click the confirmation link before signing in.", { duration: 8000 });
       }}
     >
       <div className="space-y-1.5">
