@@ -12,9 +12,9 @@ import LeafletMap from "@/components/LeafletMap";
 import { AvatarImg } from "@/components/AvatarImg";
 import { supabase } from "@/integrations/supabase/client";
 import type { GeocodeResult } from "@/lib/geo";
-import { formatDistance } from "@/lib/geo";
+import { formatDistance, reverseGeocode, ZA_DEFAULT_CENTER } from "@/lib/geo";
 import { toast } from "sonner";
-import { Loader2, Search as SearchIcon, Star, Users, Clock } from "lucide-react";
+import { Loader2, Search as SearchIcon, Star, Users, Clock, Crosshair } from "lucide-react";
 import { format } from "date-fns";
 
 // Weighted match score: rating dominates, light penalty for detour + late departures.
