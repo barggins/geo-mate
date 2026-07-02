@@ -77,16 +77,22 @@ function Search() {
 
         <Card className="mt-6 grid gap-3 p-5 md:grid-cols-[1fr_1fr_auto_auto]">
           <div className="space-y-1.5">
-            <Label>Pickup</Label>
-            <LocationSearch value={pickup} onChange={setPickup} placeholder="Where are you starting?" />
+            <div className="flex items-center justify-between">
+              <Label>Pickup</Label>
+              <Button type="button" variant="ghost" size="sm" onClick={useMyLocation} disabled={locating} className="h-6 gap-1 px-2 text-xs">
+                {locating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Crosshair className="h-3 w-3" />}
+                Use my location
+              </Button>
+            </div>
+            <LocationSearch value={pickup} onChange={setPickup} placeholder="Where are you starting? (South Africa)" />
           </div>
           <div className="space-y-1.5">
             <Label>Dropoff</Label>
-            <LocationSearch value={dropoff} onChange={setDropoff} placeholder="Where are you going?" />
+            <LocationSearch value={dropoff} onChange={setDropoff} placeholder="Where are you going? (South Africa)" />
           </div>
           <div className="space-y-1.5">
             <Label>Radius (km)</Label>
-            <Input type="number" min={1} max={20} value={radius} onChange={(e) => setRadius(parseInt(e.target.value) || 3)} className="w-24" />
+            <Input type="number" min={1} max={100} value={radius} onChange={(e) => setRadius(parseInt(e.target.value) || 10)} className="w-24" />
           </div>
           <div className="flex items-end">
             <Button onClick={runSearch} disabled={loading} className="brand-gradient text-white">
