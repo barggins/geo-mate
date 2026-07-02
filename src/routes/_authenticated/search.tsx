@@ -132,7 +132,7 @@ function Search() {
           <div className="lg:sticky lg:top-20 lg:self-start">
             <ClientOnly fallback={<div className="h-[420px] rounded-xl border bg-muted" />}>
               <LeafletMap
-                center={pickup ? [pickup.lat, pickup.lng] : [51.5074, -0.1278]}
+                center={pickup ? [pickup.lat, pickup.lng] : [-26.2041, 28.0473]}
                 markers={[
                   ...(pickup ? [{ position: [pickup.lat, pickup.lng] as [number, number] }] : []),
                   ...(dropoff ? [{ position: [dropoff.lat, dropoff.lng] as [number, number] }] : []),

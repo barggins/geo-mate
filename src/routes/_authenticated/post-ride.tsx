@@ -124,7 +124,7 @@ function PostRide() {
           <div className="space-y-3">
             <ClientOnly fallback={<div className="h-[420px] rounded-xl border bg-muted" />}>
               <LeafletMap
-                center={origin ? [origin.lat, origin.lng] : [51.5074, -0.1278]}
+                center={origin ? [origin.lat, origin.lng] : [-26.2041, 28.0473]}
                 markers={markers}
                 polyline={route?.coords.map(([lng, lat]) => [lat, lng])}
                 height="420px"

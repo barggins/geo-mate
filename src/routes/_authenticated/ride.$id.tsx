@@ -248,7 +248,7 @@ function RideMap({ ride, liveLoc }: { ride: any; liveLoc: { lat: number; lng: nu
 
   return (
     <LeafletMap
-      center={liveLoc ? [liveLoc.lat, liveLoc.lng] : origin ?? [51.5074, -0.1278]}
+      center={liveLoc ? [liveLoc.lat, liveLoc.lng] : origin ?? [-26.2041, 28.0473]}
       markers={markers}
       polyline={polyline}
       height="460px"
