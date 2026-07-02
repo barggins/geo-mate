@@ -32,9 +32,26 @@ export const Route = createFileRoute("/_authenticated/search")({
 function Search() {
   const [pickup, setPickup] = useState<GeocodeResult | null>(null);
   const [dropoff, setDropoff] = useState<GeocodeResult | null>(null);
-  const [radius, setRadius] = useState(3);
+  const [radius, setRadius] = useState(10);
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [locating, setLocating] = useState(false);
+
+  const useMyLocation = () => {
+    if (!navigator.geolocation) { toast.error("Geolocation not supported"); return; }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const rev = await reverseGeocode(latitude, longitude);
+        setPickup(rev ?? { label: `My location (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`, lat: latitude, lng: longitude });
+        setLocating(false);
+        toast.success("Pickup set to your current location");
+      },
+      (err) => { setLocating(false); toast.error(err.message || "Couldn't get your location"); },
+      { enableHighAccuracy: true, timeout: 10_000 },
+    );
+  };
 
   const runSearch = async () => {
     if (!pickup || !dropoff) { toast.error("Pick both pickup and dropoff"); return; }
