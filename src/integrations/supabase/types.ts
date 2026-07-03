@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      driver_applications: {
+        Row: {
+          admin_notes: string | null
+          bank_account_holder: string | null
+          bank_account_number: string | null
+          bank_branch_code: string | null
+          bank_name: string | null
+          created_at: string
+          id: string
+          licence_url: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["driver_app_status"]
+          updated_at: string
+          user_id: string
+          vehicle_color: string | null
+          vehicle_make: string | null
+          vehicle_model: string | null
+          vehicle_photos: string[] | null
+          vehicle_plate: string | null
+          vehicle_reg_url: string | null
+          vehicle_year: number | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          bank_account_holder?: string | null
+          bank_account_number?: string | null
+          bank_branch_code?: string | null
+          bank_name?: string | null
+          created_at?: string
+          id?: string
+          licence_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["driver_app_status"]
+          updated_at?: string
+          user_id: string
+          vehicle_color?: string | null
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_photos?: string[] | null
+          vehicle_plate?: string | null
+          vehicle_reg_url?: string | null
+          vehicle_year?: number | null
+        }
+        Update: {
+          admin_notes?: string | null
+          bank_account_holder?: string | null
+          bank_account_number?: string | null
+          bank_branch_code?: string | null
+          bank_name?: string | null
+          created_at?: string
+          id?: string
+          licence_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["driver_app_status"]
+          updated_at?: string
+          user_id?: string
+          vehicle_color?: string | null
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_photos?: string[] | null
+          vehicle_plate?: string | null
+          vehicle_reg_url?: string | null
+          vehicle_year?: number | null
+        }
+        Relationships: []
+      }
       locations: {
         Row: {
           driver_id: string
@@ -1546,6 +1615,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      driver_app_status: "pending" | "approved" | "rejected"
       notification_channel: "in_app" | "push" | "sms" | "whatsapp"
       notification_type:
         | "ride_request"
@@ -1694,6 +1764,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      driver_app_status: ["pending", "approved", "rejected"],
       notification_channel: ["in_app", "push", "sms", "whatsapp"],
       notification_type: [
         "ride_request",
