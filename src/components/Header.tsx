@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Logo } from "./Logo";
 import { Button } from "./ui/button";
 import { useAuth } from "@/lib/auth";
-import { LogOut, Menu, Search, Plus, LayoutDashboard, User as UserIcon, MapPin, AlertTriangle, Settings as SettingsIcon } from "lucide-react";
+import { LogOut, Menu, Search, Plus, LayoutDashboard, User as UserIcon, MapPin, AlertTriangle, Settings as SettingsIcon, ShieldCheck } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,6 +33,9 @@ export function Header() {
               </Button>
               <Button variant="ghost" asChild>
                 <Link to="/post-ride"><Plus className="mr-2 h-4 w-4" />Post a ride</Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/become-driver"><ShieldCheck className="mr-2 h-4 w-4" />Become a driver</Link>
               </Button>
               <Button variant="ghost" asChild>
                 <Link to="/live-map"><MapPin className="mr-2 h-4 w-4" />Live map</Link>
