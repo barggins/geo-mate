@@ -18,7 +18,16 @@ function AdminPage() {
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [profiles, setProfiles] = useState<any[]>([]);
+  const [apps, setApps] = useState<any[]>([]);
   const [q, setQ] = useState("");
+
+  const loadApps = async () => {
+    const { data } = await supabase
+      .from("driver_applications")
+      .select("*")
+      .order("created_at", { ascending: false });
+    setApps(data ?? []);
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -39,10 +48,21 @@ function AdminPage() {
           list.forEach((p: any) => { p.phone = map.get(p.id) ?? null; });
         }
         setProfiles(list);
+        await loadApps();
       }
 
     })();
   }, [user]);
+
+  async function decideApp(id: string, status: "approved" | "rejected", notes?: string) {
+    const { error } = await supabase
+      .from("driver_applications")
+      .update({ status, admin_notes: notes ?? null })
+      .eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success(`Application ${status}`);
+    await loadApps();
+  }
 
 
   if (isAdmin === null) {
@@ -106,6 +126,47 @@ function AdminPage() {
               <Button variant={p.verified ? "outline" : "default"} className={p.verified ? "" : "brand-gradient text-white"} onClick={() => toggleVerified(p)}>
                 {p.verified ? <><ShieldOff className="mr-2 h-4 w-4" />Revoke</> : <><ShieldCheck className="mr-2 h-4 w-4" />Verify</>}
               </Button>
+            </div>
+          ))}
+        </Card>
+
+        <h2 className="mt-10 mb-3 text-2xl font-bold">Driver applications</h2>
+        <Card className="divide-y">
+          {apps.length === 0 ? (
+            <p className="p-6 text-center text-sm text-muted-foreground">No applications submitted yet.</p>
+          ) : apps.map((a) => (
+            <div key={a.id} className="space-y-2 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <p className="font-semibold text-sm">User: <span className="font-mono text-xs">{a.user_id}</span></p>
+                  <p className="text-xs text-muted-foreground">Submitted {new Date(a.created_at).toLocaleString()}</p>
+                </div>
+                <Badge variant={a.status === "approved" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}
+                  className={a.status === "approved" ? "bg-[color:var(--brand-green)] text-white" : ""}>
+                  {a.status}
+                </Badge>
+              </div>
+              <div className="grid gap-1 text-xs text-muted-foreground md:grid-cols-2">
+                <div>Vehicle: {a.vehicle_make} {a.vehicle_model} ({a.vehicle_year}) — {a.vehicle_color}, {a.vehicle_plate}</div>
+                <div>Bank: {a.bank_name} / {a.bank_account_holder} / {a.bank_account_number} / {a.bank_branch_code}</div>
+                <div>Licence: {a.licence_url ? <span className="font-mono">{a.licence_url}</span> : "—"}</div>
+                <div>Vehicle reg: {a.vehicle_reg_url ? <span className="font-mono">{a.vehicle_reg_url}</span> : "—"}</div>
+                <div className="md:col-span-2">Vehicle photos: {(a.vehicle_photos ?? []).length} file(s)</div>
+              </div>
+              {a.admin_notes && <p className="text-xs"><b>Notes:</b> {a.admin_notes}</p>}
+              {a.status === "pending" && (
+                <div className="flex gap-2">
+                  <Button size="sm" className="brand-gradient text-white" onClick={() => decideApp(a.id, "approved")}>
+                    Approve & verify
+                  </Button>
+                  <Button size="sm" variant="destructive" onClick={() => {
+                    const notes = window.prompt("Rejection reason (optional):") ?? undefined;
+                    decideApp(a.id, "rejected", notes);
+                  }}>
+                    Reject
+                  </Button>
+                </div>
+              )}
             </div>
           ))}
         </Card>
