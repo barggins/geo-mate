@@ -55,6 +55,10 @@ function PostRide() {
 
   const submit = async () => {
     if (!user || !origin || !destination) return;
+    if (driverStatus !== "approved") {
+      toast.error("Only verified drivers can post rides. Complete driver verification first.");
+      return;
+    }
     setSaving(true);
     if (!route) await computeRoute();
     const r = route ?? (await getRoute(origin, destination));
