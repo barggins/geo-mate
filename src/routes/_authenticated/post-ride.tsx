@@ -1,5 +1,5 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Header } from "@/components/Header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import { getRoute, coordsToWKT, pointToWKT, type GeocodeResult, formatDistance, 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import { Loader2, Route as RouteIcon } from "lucide-react";
+import { Loader2, Route as RouteIcon, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/post-ride")({
   component: PostRide,
@@ -22,6 +22,7 @@ export const Route = createFileRoute("/_authenticated/post-ride")({
 function PostRide() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [driverStatus, setDriverStatus] = useState<"loading" | "none" | "pending" | "approved" | "rejected">("loading");
   const [origin, setOrigin] = useState<GeocodeResult | null>(null);
   const [destination, setDestination] = useState<GeocodeResult | null>(null);
   const [departAt, setDepartAt] = useState(() => {
@@ -35,6 +36,14 @@ function PostRide() {
   const [route, setRoute] = useState<{ coords: [number, number][]; distanceMeters: number; durationSeconds: number } | null>(null);
   const [routing, setRouting] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      const { data } = await supabase.from("driver_applications").select("status").eq("user_id", user.id).maybeSingle();
+      setDriverStatus((data?.status as any) ?? "none");
+    })();
+  }, [user]);
 
   const computeRoute = async () => {
     if (!origin || !destination) return;
@@ -83,7 +92,31 @@ function PostRide() {
         <h1 className="text-3xl font-bold">Post a ride</h1>
         <p className="mt-1 text-muted-foreground">Share your commute and pick up riders heading your way.</p>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
+        {driverStatus !== "approved" && (
+          <Card className="mt-6 border-amber-300 bg-amber-50 p-5">
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="mt-1 h-5 w-5 text-amber-700" />
+              <div className="flex-1">
+                <p className="font-semibold text-amber-900">
+                  {driverStatus === "loading" && "Checking your driver status…"}
+                  {driverStatus === "none" && "You're not verified as a driver yet"}
+                  {driverStatus === "pending" && "Your driver application is under review"}
+                  {driverStatus === "rejected" && "Your driver application was rejected"}
+                </p>
+                <p className="text-sm text-amber-800">
+                  Only verified drivers can post rides. Upload your driver's licence, vehicle registration, vehicle photos and banking details for admin approval.
+                </p>
+                {driverStatus !== "loading" && driverStatus !== "pending" && (
+                  <Button asChild className="mt-3 brand-gradient text-white">
+                    <Link to="/become-driver">Start verification</Link>
+                  </Button>
+                )}
+              </div>
+            </div>
+          </Card>
+        )}
+
+        <div className={"mt-6 grid gap-6 lg:grid-cols-[1fr_1.2fr] " + (driverStatus !== "approved" ? "pointer-events-none opacity-50" : "")}>
           <Card className="space-y-4 p-5">
             <div className="space-y-1.5">
               <Label>From</Label>
