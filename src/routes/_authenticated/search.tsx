@@ -54,11 +54,14 @@ function Search() {
   };
 
   const runSearch = async () => {
-    if (!pickup || !dropoff) { toast.error("Pick both pickup and dropoff"); return; }
+    if (!pickup) { toast.error("Set a pickup (or tap 'Use my location')"); return; }
+    // Dropoff is optional — when omitted, we search for any ride whose route passes near pickup.
+    // The RPC still needs dropoff coords, so we reuse pickup as a permissive fallback and rely on radius.
+    const drop = dropoff ?? pickup;
     setLoading(true);
     const { data, error } = await supabase.rpc("search_rides", {
       pickup_lat: pickup.lat, pickup_lng: pickup.lng,
-      dropoff_lat: dropoff.lat, dropoff_lng: dropoff.lng,
+      dropoff_lat: drop.lat, dropoff_lng: drop.lng,
       radius_m: radius * 1000,
     });
     setLoading(false);
@@ -73,7 +76,7 @@ function Search() {
       <Header />
       <main className="mx-auto max-w-7xl px-4 py-8">
         <h1 className="text-3xl font-bold">Find a ride</h1>
-        <p className="text-muted-foreground">We'll find drivers whose route passes within walking distance of your pickup and dropoff.</p>
+        <p className="text-muted-foreground">Set your pickup (or use your current location) and pick a radius to see all rides posted near you. Dropoff is optional.</p>
 
         <Card className="mt-6 grid gap-3 p-5 md:grid-cols-[1fr_1fr_auto_auto]">
           <div className="space-y-1.5">
@@ -87,8 +90,8 @@ function Search() {
             <LocationSearch value={pickup} onChange={setPickup} placeholder="Where are you starting? (South Africa)" />
           </div>
           <div className="space-y-1.5">
-            <Label>Dropoff</Label>
-            <LocationSearch value={dropoff} onChange={setDropoff} placeholder="Where are you going? (South Africa)" />
+            <Label>Dropoff <span className="text-xs text-muted-foreground">(optional)</span></Label>
+            <LocationSearch value={dropoff} onChange={setDropoff} placeholder="Leave blank to see all nearby rides" />
           </div>
           <div className="space-y-1.5">
             <Label>Radius (km)</Label>

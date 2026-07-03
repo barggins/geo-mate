@@ -74,9 +74,17 @@ function SignInForm() {
         setBusy(true);
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         setBusy(false);
-        if (error) toast.error(error.message); else toast.success("Welcome back!");
+        if (error) {
+          const msg = /confirm|not confirmed|verify/i.test(error.message)
+            ? "Please verify your email first. Check your inbox for the confirmation link before signing in."
+            : error.message;
+          toast.error(msg, { duration: 8000 });
+        } else toast.success("Welcome back!");
       }}
     >
+      <div className="rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-900">
+        New accounts must confirm their email address (check your inbox) before signing in.
+      </div>
       <div className="space-y-1.5">
         <Label htmlFor="si-email">Email</Label>
         <Input id="si-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
