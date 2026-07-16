@@ -144,59 +144,8 @@ function Landing() {
         </div>
       </section>
 
-      {/* PRICING */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="mb-3">
-            <p className="font-mono-num text-[11px] uppercase tracking-widest text-[color:var(--steel)]">/ 03 · Pricing</p>
-            <h2 className="mt-2 font-display text-3xl tracking-tight text-[color:var(--asphalt)] md:text-4xl">Cheaper than driving alone. Cheaper than a daily Uber.</h2>
-            <p className="mt-2 max-w-xl text-sm text-[color:var(--steel)]">
-              Average LiftClub commuter saves <span className="font-mono-num font-semibold text-[color:var(--asphalt)]">R400–R900/month</span> vs. solo driving or ride-hailing.
-            </p>
-          </div>
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {[
-              { tag: "FREE", name: "Basic", price: "R0", features: ["Post up to 2 rides / month", "Request up to 5 rides / month", "Basic profile", "In-app messaging"] },
-              { tag: "MOST POPULAR", name: "Commuter Pro", price: "R99", popular: true, features: ["Unlimited ride posts", "Unlimited requests", "Priority matching", "Recurring/daily rides", "Verified badge", "Advanced filters"] },
-              { tag: "BUSINESS", name: "Team", price: "R249", features: ["Everything in Pro", "Company domain matching", "Admin dashboard", "Bulk seat bookings", "SSO login", "HR exports"] },
-            ].map((p) => (
-              <div
-                key={p.name}
-                className={`relative rounded-xl border p-6 transition-shadow ${
-                  p.popular
-                    ? "border-[color:var(--signal)] bg-white shadow-[0_20px_60px_-30px_rgba(255,176,32,0.55)]"
-                    : "border-[color:var(--asphalt)]/12 bg-white hover:shadow-md"
-                }`}
-              >
-                <p className={`font-mono-num text-[10px] tracking-widest ${p.popular ? "text-[color:var(--signal)]" : "text-[color:var(--steel)]"}`}>{p.tag}</p>
-                <h3 className="mt-1 font-display text-xl text-[color:var(--asphalt)]">{p.name}</h3>
-                <p className="mt-2">
-                  <span className="font-mono-num text-4xl font-semibold text-[color:var(--asphalt)]">{p.price}</span>
-                  <span className="ml-1 text-sm text-[color:var(--steel)]">/ mo</span>
-                </p>
-                <ul className="mt-5 space-y-2 text-sm text-[color:var(--asphalt)]/85">
-                  {p.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--transit)]" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Button
-                  asChild
-                  className={`mt-6 h-11 w-full rounded-md font-semibold ${
-                    p.popular
-                      ? "bg-[color:var(--signal)] text-[color:var(--asphalt)] hover:bg-[color:var(--signal)]"
-                      : "border border-[color:var(--asphalt)]/15 bg-white text-[color:var(--asphalt)] hover:bg-[color:var(--sky-tint)]"
-                  }`}
-                >
-                  <Link to="/auth">{p.popular ? "Start Pro" : `Choose ${p.name}`}</Link>
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* PRICING removed — product is still in development */}
+
 
       {/* CTA */}
       <section className="pb-20">
