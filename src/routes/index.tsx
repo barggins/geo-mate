@@ -26,7 +26,7 @@ function Landing() {
       <Header />
 
       {/* HERO — dispatch strip */}
-      <section className="border-b border-[color:var(--asphalt)]/10">
+      <section className="border-b border-[color:var(--asphalt)]/10 animate-fade-in">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 pb-14 pt-10 md:grid-cols-[1.1fr_1.2fr] md:pt-16 lg:gap-14">
           <div className="flex flex-col justify-center">
             <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-[color:var(--asphalt)]/12 bg-white px-3 py-1 text-[11px] font-medium uppercase tracking-widest text-[color:var(--steel)]">
@@ -90,7 +90,7 @@ function Landing() {
               { i: MessageCircle, t: "In-app chat", d: "Coordinate pickup safely — no phone numbers shared." },
               { i: Star, t: "Mutual reviews", d: "Ratings and notes after every ride keep the network trustworthy." },
             ].map((f, i) => (
-              <div key={f.t} className="group bg-background p-6 transition-colors hover:bg-[color:var(--sky-tint)]">
+              <div key={f.t} style={{ animationDelay: `${i * 60}ms` }} className="group bg-background p-6 transition-all duration-300 hover:bg-[color:var(--sky-tint)] hover:-translate-y-0.5 animate-fade-in">
                 <div className="flex items-center justify-between">
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-[color:var(--asphalt)] text-[color:var(--signal)]">
                     <f.i className="h-5 w-5" />
