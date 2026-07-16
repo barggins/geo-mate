@@ -9,9 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedVerifyIdentityRouteImport } from './routes/_authenticated/verify-identity'
 import { Route as AuthenticatedSosRouteImport } from './routes/_authenticated/sos'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
@@ -24,6 +26,11 @@ import { Route as AuthenticatedBecomeDriverRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedRideIdRouteImport } from './routes/_authenticated/ride.$id'
 
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -38,6 +45,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedVerifyIdentityRoute =
+  AuthenticatedVerifyIdentityRouteImport.update({
+    id: '/verify-identity',
+    path: '/verify-identity',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSosRoute = AuthenticatedSosRouteImport.update({
   id: '/sos',
   path: '/sos',
@@ -98,6 +111,7 @@ const AuthenticatedRideIdRoute = AuthenticatedRideIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/become-driver': typeof AuthenticatedBecomeDriverRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -108,11 +122,13 @@ export interface FileRoutesByFullPath {
   '/search': typeof AuthenticatedSearchRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/sos': typeof AuthenticatedSosRoute
+  '/verify-identity': typeof AuthenticatedVerifyIdentityRoute
   '/ride/$id': typeof AuthenticatedRideIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/become-driver': typeof AuthenticatedBecomeDriverRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -123,6 +139,7 @@ export interface FileRoutesByTo {
   '/search': typeof AuthenticatedSearchRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/sos': typeof AuthenticatedSosRoute
+  '/verify-identity': typeof AuthenticatedVerifyIdentityRoute
   '/ride/$id': typeof AuthenticatedRideIdRoute
 }
 export interface FileRoutesById {
@@ -130,6 +147,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/become-driver': typeof AuthenticatedBecomeDriverRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -140,6 +158,7 @@ export interface FileRoutesById {
   '/_authenticated/search': typeof AuthenticatedSearchRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/sos': typeof AuthenticatedSosRoute
+  '/_authenticated/verify-identity': typeof AuthenticatedVerifyIdentityRoute
   '/_authenticated/ride/$id': typeof AuthenticatedRideIdRoute
 }
 export interface FileRouteTypes {
@@ -147,6 +166,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/contact'
     | '/admin'
     | '/become-driver'
     | '/dashboard'
@@ -157,11 +177,13 @@ export interface FileRouteTypes {
     | '/search'
     | '/settings'
     | '/sos'
+    | '/verify-identity'
     | '/ride/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/contact'
     | '/admin'
     | '/become-driver'
     | '/dashboard'
@@ -172,12 +194,14 @@ export interface FileRouteTypes {
     | '/search'
     | '/settings'
     | '/sos'
+    | '/verify-identity'
     | '/ride/$id'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/contact'
     | '/_authenticated/admin'
     | '/_authenticated/become-driver'
     | '/_authenticated/dashboard'
@@ -188,6 +212,7 @@ export interface FileRouteTypes {
     | '/_authenticated/search'
     | '/_authenticated/settings'
     | '/_authenticated/sos'
+    | '/_authenticated/verify-identity'
     | '/_authenticated/ride/$id'
   fileRoutesById: FileRoutesById
 }
@@ -195,10 +220,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ContactRoute: typeof ContactRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -219,6 +252,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/verify-identity': {
+      id: '/_authenticated/verify-identity'
+      path: '/verify-identity'
+      fullPath: '/verify-identity'
+      preLoaderRoute: typeof AuthenticatedVerifyIdentityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/sos': {
       id: '/_authenticated/sos'
@@ -311,6 +351,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSosRoute: typeof AuthenticatedSosRoute
+  AuthenticatedVerifyIdentityRoute: typeof AuthenticatedVerifyIdentityRoute
   AuthenticatedRideIdRoute: typeof AuthenticatedRideIdRoute
 }
 
@@ -325,6 +366,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSearchRoute: AuthenticatedSearchRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSosRoute: AuthenticatedSosRoute,
+  AuthenticatedVerifyIdentityRoute: AuthenticatedVerifyIdentityRoute,
   AuthenticatedRideIdRoute: AuthenticatedRideIdRoute,
 }
 
@@ -335,6 +377,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ContactRoute: ContactRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

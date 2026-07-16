@@ -1,8 +1,10 @@
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 import { Button } from "./ui/button";
 import { useAuth } from "@/lib/auth";
-import { LogOut, Menu, Search, Plus, LayoutDashboard, User as UserIcon, MapPin, AlertTriangle, Settings as SettingsIcon, ShieldCheck } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { LogOut, Menu, Search, Plus, LayoutDashboard, User as UserIcon, MapPin, AlertTriangle, Settings as SettingsIcon, ShieldCheck, Mail } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +17,14 @@ import { NotificationBell } from "./NotificationBell";
 export function Header() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [role, setRole] = useState<"rider" | "driver" | null>(null);
+
+  useEffect(() => {
+    if (!user) { setRole(null); return; }
+    supabase.from("profiles").select("role").eq("id", user.id).maybeSingle().then(({ data }) => {
+      setRole((data?.role as "rider" | "driver") ?? "rider");
+    });
+  }, [user]);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/85 backdrop-blur-md">
@@ -22,8 +32,10 @@ export function Header() {
         <Link to="/" className="flex items-center gap-2">
           <Logo />
         </Link>
+
+        {/* Desktop nav */}
         <nav className="hidden items-center gap-1 md:flex">
-          {user && (
+          {user ? (
             <>
               <Button variant="ghost" asChild>
                 <Link to="/dashboard"><LayoutDashboard className="mr-2 h-4 w-4" />Dashboard</Link>
@@ -31,12 +43,21 @@ export function Header() {
               <Button variant="ghost" asChild>
                 <Link to="/search"><Search className="mr-2 h-4 w-4" />Find a ride</Link>
               </Button>
-              <Button variant="ghost" asChild>
-                <Link to="/post-ride"><Plus className="mr-2 h-4 w-4" />Post a ride</Link>
-              </Button>
-              <Button variant="ghost" asChild>
-                <Link to="/become-driver"><ShieldCheck className="mr-2 h-4 w-4" />Become a driver</Link>
-              </Button>
+              {role === "driver" && (
+                <>
+                  <Button variant="ghost" asChild>
+                    <Link to="/post-ride"><Plus className="mr-2 h-4 w-4" />Post a ride</Link>
+                  </Button>
+                  <Button variant="ghost" asChild>
+                    <Link to="/become-driver"><ShieldCheck className="mr-2 h-4 w-4" />Driver KYC</Link>
+                  </Button>
+                </>
+              )}
+              {role === "rider" && (
+                <Button variant="ghost" asChild>
+                  <Link to="/verify-identity"><ShieldCheck className="mr-2 h-4 w-4" />Verify ID</Link>
+                </Button>
+              )}
               <Button variant="ghost" asChild>
                 <Link to="/live-map"><MapPin className="mr-2 h-4 w-4" />Live map</Link>
               </Button>
@@ -47,8 +68,18 @@ export function Header() {
                 <Link to="/rides-log">Log</Link>
               </Button>
             </>
+          ) : (
+            <>
+              <Button variant="ghost" asChild>
+                <Link to="/contact"><Mail className="mr-2 h-4 w-4" />Contact us</Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/auth"><AlertTriangle className="mr-2 h-4 w-4 text-red-600" />SOS</Link>
+              </Button>
+            </>
           )}
         </nav>
+
         <div className="flex items-center gap-2">
           {user ? (
             <>
@@ -97,7 +128,9 @@ export function Header() {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>Dashboard</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/search" })}>Find a ride</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/post-ride" })}>Post a ride</DropdownMenuItem>
+                {role === "driver" && <DropdownMenuItem onClick={() => navigate({ to: "/post-ride" })}>Post a ride</DropdownMenuItem>}
+                {role === "driver" && <DropdownMenuItem onClick={() => navigate({ to: "/become-driver" })}>Driver KYC</DropdownMenuItem>}
+                {role === "rider" && <DropdownMenuItem onClick={() => navigate({ to: "/verify-identity" })}>Verify ID</DropdownMenuItem>}
                 <DropdownMenuItem onClick={() => navigate({ to: "/live-map" })}>Live map</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/sos" })}>SOS alerts</DropdownMenuItem>
               </DropdownMenuContent>

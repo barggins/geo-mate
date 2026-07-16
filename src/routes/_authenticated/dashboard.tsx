@@ -19,6 +19,7 @@ function Dashboard() {
   const [incomingRequests, setIncomingRequests] = useState<any[]>([]);
   const [myRequests, setMyRequests] = useState<any[]>([]);
   const [profile, setProfile] = useState<any>(null);
+  const role: "rider" | "driver" = profile?.role ?? "rider";
 
   useEffect(() => {
     if (!user) return;
@@ -60,6 +61,12 @@ function Dashboard() {
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [user]);
+
+  // Role themes — visually distinct, but consistent with the site identity.
+  const theme = role === "driver"
+    ? { bg: "bg-[#0F1720]", surface: "bg-[#141C27] text-slate-100 border-white/10", chip: "bg-amber-500/15 text-amber-300 border-amber-400/30", accent: "text-amber-400", avatar: "bg-gradient-to-br from-amber-400 to-orange-500 text-slate-900", header: "text-slate-100", muted: "text-slate-400", tag: "DRIVER CONSOLE" }
+    : { bg: "bg-[#F6F5F1]", surface: "bg-white text-slate-900 border-slate-200", chip: "bg-emerald-50 text-emerald-700 border-emerald-200", accent: "text-emerald-700", avatar: "bg-gradient-to-br from-emerald-400 to-teal-600 text-white", header: "text-slate-900", muted: "text-slate-500", tag: "RIDER LOUNGE" };
+
 
   return (
     <div className="min-h-screen bg-background">
