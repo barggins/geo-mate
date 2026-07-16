@@ -104,6 +104,7 @@ function SignUpForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState<"rider" | "driver">("rider");
   const [busy, setBusy] = useState(false);
   return (
     <form
@@ -113,13 +114,37 @@ function SignUpForm() {
         setBusy(true);
         const { error } = await supabase.auth.signUp({
           email, password,
-          options: { data: { name }, emailRedirectTo: window.location.origin + "/dashboard" },
+          options: { data: { name, role }, emailRedirectTo: window.location.origin + "/dashboard" },
         });
         setBusy(false);
         if (error) toast.error(error.message);
         else toast.success("Account created! Check your inbox and click the confirmation link before signing in.", { duration: 8000 });
       }}
     >
+      <div className="space-y-1.5">
+        <Label>I am a…</Label>
+        <div className="grid grid-cols-2 gap-2">
+          {(["rider","driver"] as const).map((r) => (
+            <button
+              type="button"
+              key={r}
+              onClick={() => setRole(r)}
+              className={`rounded-md border px-3 py-3 text-sm font-medium capitalize transition ${
+                role === r
+                  ? "border-[color:var(--signal,#FFB020)] bg-amber-50 text-amber-900"
+                  : "border-border bg-background hover:bg-accent/50"
+              }`}
+            >
+              {r === "rider" ? "🧍 Rider" : "🚗 Driver"}
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-muted-foreground">
+          {role === "driver"
+            ? "You'll be asked to upload your driver's licence, vehicle papers and banking details for admin approval."
+            : "You'll be asked to upload your ID document and a selfie for admin approval."}
+        </p>
+      </div>
       <div className="space-y-1.5">
         <Label htmlFor="su-name">Name</Label>
         <Input id="su-name" required value={name} onChange={(e) => setName(e.target.value)} />
@@ -149,7 +174,7 @@ function GoogleButton() {
       disabled={busy}
       onClick={async () => {
         setBusy(true);
-        const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/dashboard" });
+        const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
         if (result.error) { toast.error(String(result.error.message ?? result.error)); setBusy(false); }
       }}
     >

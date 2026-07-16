@@ -274,6 +274,7 @@ export type Database = {
           photo_url: string | null
           rating: number
           rating_count: number
+          role: Database["public"]["Enums"]["user_role"]
           updated_at: string
           verified: boolean
         }
@@ -286,6 +287,7 @@ export type Database = {
           photo_url?: string | null
           rating?: number
           rating_count?: number
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
           verified?: boolean
         }
@@ -298,6 +300,7 @@ export type Database = {
           photo_url?: string | null
           rating?: number
           rating_count?: number
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
           verified?: boolean
         }
@@ -422,6 +425,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      rider_verifications: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          id: string
+          id_document_url: string | null
+          id_number: string | null
+          selfie_url: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          id_document_url?: string | null
+          id_number?: string | null
+          selfie_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          id_document_url?: string | null
+          id_number?: string | null
+          selfie_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       rides: {
         Row: {
@@ -1628,6 +1667,7 @@ export type Database = {
         | "ride_completed"
       request_status: "pending" | "accepted" | "rejected" | "cancelled"
       ride_status: "scheduled" | "in_progress" | "completed" | "cancelled"
+      user_role: "rider" | "driver"
     }
     CompositeTypes: {
       geometry_dump: {
@@ -1778,6 +1818,7 @@ export const Constants = {
       ],
       request_status: ["pending", "accepted", "rejected", "cancelled"],
       ride_status: ["scheduled", "in_progress", "completed", "cancelled"],
+      user_role: ["rider", "driver"],
     },
   },
 } as const
