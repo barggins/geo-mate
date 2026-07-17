@@ -145,8 +145,24 @@ function PostRide() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="price">Suggested contribution per seat (R)</Label>
-              <Input id="price" type="number" min={0} step="0.5" value={price} onChange={(e) => setPrice(parseFloat(e.target.value) || 0)} />
+              <div className="flex items-center justify-between">
+                <Label htmlFor="price">Suggested contribution per seat (R)</Label>
+                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-900">Payments — coming soon</span>
+              </div>
+              <div className="flex gap-2">
+                <Input id="price" type="number" min={0} step="0.5" value={price} onChange={(e) => setPrice(parseFloat(e.target.value) || 0)} />
+                <Button type="button" variant="outline" disabled={!route}
+                  onClick={() => {
+                    // Auto-estimate: fuel-based. ~R24/L petrol, ~8 L/100km, split by seats.
+                    const km = (route!.distanceMeters / 1000);
+                    const fuelCost = km * (8 / 100) * 24; // R
+                    const perSeat = Math.max(20, Math.round((fuelCost / Math.max(1, seats)) / 5) * 5);
+                    setPrice(perSeat);
+                    toast.success(`Estimated R${perSeat}/seat from ${km.toFixed(1)} km`);
+                  }}
+                >Auto-estimate</Button>
+              </div>
+              <p className="text-[11px] text-muted-foreground">In-app payment processing isn't live yet — for now, riders pay you directly (cash/EFT) on the day.</p>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="notes">Notes (optional)</Label>
