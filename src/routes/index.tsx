@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/Logo";
@@ -169,12 +170,7 @@ function Landing() {
         </div>
       </section>
 
-      <footer className="border-t border-[color:var(--asphalt)]/10 py-10 text-sm text-[color:var(--steel)]">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
-          <Logo />
-          <p className="font-mono-num text-[11px] uppercase tracking-widest">© {new Date().getFullYear()} LiftClub · Share the Ride. Split the Cost.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

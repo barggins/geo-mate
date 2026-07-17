@@ -105,12 +105,14 @@ function SignUpForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"rider" | "driver">("rider");
+  const [agreed, setAgreed] = useState(false);
   const [busy, setBusy] = useState(false);
   return (
     <form
       className="space-y-3"
       onSubmit={async (e) => {
         e.preventDefault();
+        if (!agreed) { toast.error("You must accept the Terms and Privacy Policy to create an account."); return; }
         setBusy(true);
         const { error } = await supabase.auth.signUp({
           email, password,
@@ -157,7 +159,15 @@ function SignUpForm() {
         <Label htmlFor="su-pw">Password</Label>
         <Input id="su-pw" type="password" minLength={6} required value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
-      <Button type="submit" className="w-full brand-gradient text-white" disabled={busy}>
+      <label className="flex items-start gap-2 rounded-md border p-2 text-xs">
+        <input type="checkbox" className="mt-0.5" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+        <span>
+          I am 18 or older and I agree to the{" "}
+          <Link to="/terms" className="underline">Terms of Service</Link> and{" "}
+          <Link to="/privacy" className="underline">Privacy Policy</Link>, including sharing my live location with the other party during accepted rides.
+        </span>
+      </label>
+      <Button type="submit" className="w-full brand-gradient text-white" disabled={busy || !agreed}>
         {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Lock className="mr-2 h-4 w-4" /> Create account</>}
       </Button>
     </form>
