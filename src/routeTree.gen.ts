@@ -23,6 +23,7 @@ import { Route as AuthenticatedRidesLogRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPostRideRouteImport } from './routes/_authenticated/post-ride'
 import { Route as AuthenticatedLiveMapRouteImport } from './routes/_authenticated/live-map'
+import { Route as AuthenticatedGroupsRouteImport } from './routes/_authenticated/groups'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedBecomeDriverRouteImport } from './routes/_authenticated/become-driver'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -98,6 +99,11 @@ const AuthenticatedLiveMapRoute = AuthenticatedLiveMapRouteImport.update({
   path: '/live-map',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedGroupsRoute = AuthenticatedGroupsRouteImport.update({
+  id: '/groups',
+  path: '/groups',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/become-driver': typeof AuthenticatedBecomeDriverRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/groups': typeof AuthenticatedGroupsRoute
   '/live-map': typeof AuthenticatedLiveMapRoute
   '/post-ride': typeof AuthenticatedPostRideRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -148,6 +155,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/become-driver': typeof AuthenticatedBecomeDriverRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/groups': typeof AuthenticatedGroupsRoute
   '/live-map': typeof AuthenticatedLiveMapRoute
   '/post-ride': typeof AuthenticatedPostRideRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -169,6 +177,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/become-driver': typeof AuthenticatedBecomeDriverRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/groups': typeof AuthenticatedGroupsRoute
   '/_authenticated/live-map': typeof AuthenticatedLiveMapRoute
   '/_authenticated/post-ride': typeof AuthenticatedPostRideRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -190,6 +199,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/become-driver'
     | '/dashboard'
+    | '/groups'
     | '/live-map'
     | '/post-ride'
     | '/profile'
@@ -209,6 +219,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/become-driver'
     | '/dashboard'
+    | '/groups'
     | '/live-map'
     | '/post-ride'
     | '/profile'
@@ -229,6 +240,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/become-driver'
     | '/_authenticated/dashboard'
+    | '/_authenticated/groups'
     | '/_authenticated/live-map'
     | '/_authenticated/post-ride'
     | '/_authenticated/profile'
@@ -349,6 +361,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLiveMapRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/groups': {
+      id: '/_authenticated/groups'
+      path: '/groups'
+      fullPath: '/groups'
+      preLoaderRoute: typeof AuthenticatedGroupsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -384,6 +403,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedBecomeDriverRoute: typeof AuthenticatedBecomeDriverRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedGroupsRoute: typeof AuthenticatedGroupsRoute
   AuthenticatedLiveMapRoute: typeof AuthenticatedLiveMapRoute
   AuthenticatedPostRideRoute: typeof AuthenticatedPostRideRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
@@ -399,6 +419,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedBecomeDriverRoute: AuthenticatedBecomeDriverRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedGroupsRoute: AuthenticatedGroupsRoute,
   AuthenticatedLiveMapRoute: AuthenticatedLiveMapRoute,
   AuthenticatedPostRideRoute: AuthenticatedPostRideRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,

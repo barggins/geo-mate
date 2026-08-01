@@ -78,3 +78,20 @@ export function formatDuration(s: number): string {
   const m = mins % 60;
   return `${h}h ${m}m`;
 }
+
+/** Driving route through an ordered list of waypoints (origin, stops…, destination). */
+export async function getRouteVia(points: LatLng[]): Promise<Route | null> {
+  if (points.length < 2) return null;
+  const coords = points.map((p) => `${p.lng},${p.lat}`).join(";");
+  const url = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`;
+  const r = await fetch(url);
+  if (!r.ok) return null;
+  const json = await r.json();
+  const route = json.routes?.[0];
+  if (!route) return null;
+  return {
+    coords: route.geometry.coordinates as Array<[number, number]>,
+    distanceMeters: route.distance,
+    durationSeconds: route.duration,
+  };
+}
