@@ -83,6 +83,133 @@ export type Database = {
         }
         Relationships: []
       }
+      group_members: {
+        Row: {
+          created_at: string
+          group_id: string
+          id: string
+          member_role: Database["public"]["Enums"]["group_member_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          group_id: string
+          id?: string
+          member_role?: Database["public"]["Enums"]["group_member_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          group_id?: string
+          id?: string
+          member_role?: Database["public"]["Enums"]["group_member_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_stops: {
+        Row: {
+          created_at: string
+          group_id: string
+          id: string
+          label: string
+          lat: number
+          lng: number
+          seq: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          group_id: string
+          id?: string
+          label: string
+          lat: number
+          lng: number
+          seq?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          group_id?: string
+          id?: string
+          label?: string
+          lat?: number
+          lng?: number
+          seq?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_stops_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      groups: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          destination_label: string
+          destination_lat: number
+          destination_lng: number
+          id: string
+          is_public: boolean
+          name: string
+          origin_label: string
+          origin_lat: number
+          origin_lng: number
+          updated_at: string
+          vehicle_type: Database["public"]["Enums"]["vehicle_kind"]
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          destination_label: string
+          destination_lat: number
+          destination_lng: number
+          id?: string
+          is_public?: boolean
+          name: string
+          origin_label: string
+          origin_lat: number
+          origin_lng: number
+          updated_at?: string
+          vehicle_type?: Database["public"]["Enums"]["vehicle_kind"]
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          destination_label?: string
+          destination_lat?: number
+          destination_lng?: number
+          id?: string
+          is_public?: boolean
+          name?: string
+          origin_label?: string
+          origin_lat?: number
+          origin_lng?: number
+          updated_at?: string
+          vehicle_type?: Database["public"]["Enums"]["vehicle_kind"]
+        }
+        Relationships: []
+      }
       locations: {
         Row: {
           driver_id: string
@@ -471,7 +598,9 @@ export type Database = {
           destination_lat: number | null
           destination_lng: number | null
           driver_id: string
+          group_id: string | null
           id: string
+          is_full: boolean
           notes: string | null
           origin: unknown
           origin_label: string
@@ -482,6 +611,7 @@ export type Database = {
           seats_left: number
           seats_total: number
           status: Database["public"]["Enums"]["ride_status"]
+          vehicle_type: Database["public"]["Enums"]["vehicle_kind"]
         }
         Insert: {
           created_at?: string
@@ -491,7 +621,9 @@ export type Database = {
           destination_lat?: number | null
           destination_lng?: number | null
           driver_id: string
+          group_id?: string | null
           id?: string
+          is_full?: boolean
           notes?: string | null
           origin: unknown
           origin_label: string
@@ -502,6 +634,7 @@ export type Database = {
           seats_left: number
           seats_total: number
           status?: Database["public"]["Enums"]["ride_status"]
+          vehicle_type?: Database["public"]["Enums"]["vehicle_kind"]
         }
         Update: {
           created_at?: string
@@ -511,7 +644,9 @@ export type Database = {
           destination_lat?: number | null
           destination_lng?: number | null
           driver_id?: string
+          group_id?: string | null
           id?: string
+          is_full?: boolean
           notes?: string | null
           origin?: unknown
           origin_label?: string
@@ -522,8 +657,17 @@ export type Database = {
           seats_left?: number
           seats_total?: number
           status?: Database["public"]["Enums"]["ride_status"]
+          vehicle_type?: Database["public"]["Enums"]["vehicle_kind"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "rides_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sos_alerts: {
         Row: {
@@ -991,6 +1135,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_approved_driver: { Args: { _uid: string }; Returns: boolean }
       longtransactionsenabled: { Args: never; Returns: boolean }
       populate_geometry_columns:
         | { Args: { tbl_oid: unknown; use_typmod?: boolean }; Returns: number }
@@ -1655,6 +1800,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "user"
       driver_app_status: "pending" | "approved" | "rejected"
+      group_member_role: "member" | "driver"
       notification_channel: "in_app" | "push" | "sms" | "whatsapp"
       notification_type:
         | "ride_request"
@@ -1668,6 +1814,7 @@ export type Database = {
       request_status: "pending" | "accepted" | "rejected" | "cancelled"
       ride_status: "scheduled" | "in_progress" | "completed" | "cancelled"
       user_role: "rider" | "driver"
+      vehicle_kind: "car" | "van" | "bus" | "taxi"
     }
     CompositeTypes: {
       geometry_dump: {
@@ -1805,6 +1952,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user"],
       driver_app_status: ["pending", "approved", "rejected"],
+      group_member_role: ["member", "driver"],
       notification_channel: ["in_app", "push", "sms", "whatsapp"],
       notification_type: [
         "ride_request",
@@ -1819,6 +1967,7 @@ export const Constants = {
       request_status: ["pending", "accepted", "rejected", "cancelled"],
       ride_status: ["scheduled", "in_progress", "completed", "cancelled"],
       user_role: ["rider", "driver"],
+      vehicle_kind: ["car", "van", "bus", "taxi"],
     },
   },
 } as const
