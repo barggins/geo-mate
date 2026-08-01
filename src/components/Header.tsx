@@ -43,6 +43,10 @@ export function Header() {
               <Button variant="ghost" asChild>
                 <Link to="/search"><Search className="mr-2 h-4 w-4" />Find a ride</Link>
               </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/groups"><Users className="mr-2 h-4 w-4" />Groups</Link>
+              </Button>
+
               {role === "driver" && (
                 <>
                   <Button variant="ghost" asChild>
