@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/Logo";
 import { RouteHero } from "@/components/RouteHero";
+import howItWorks from "@/assets/liftclub-how-it-works.png.asset.json";
+
 import {
   MapPin, Users, Shield, Zap, MessageCircle, Star, ArrowRight, Check, Radio,
 } from "lucide-react";
