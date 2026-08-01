@@ -4,7 +4,7 @@ import { Logo } from "./Logo";
 import { Button } from "./ui/button";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, Menu, Search, Plus, LayoutDashboard, User as UserIcon, MapPin, AlertTriangle, Settings as SettingsIcon, ShieldCheck, Mail } from "lucide-react";
+import { LogOut, Menu, Search, Plus, LayoutDashboard, User as UserIcon, MapPin, AlertTriangle, Settings as SettingsIcon, ShieldCheck, Mail, Users } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,6 +43,10 @@ export function Header() {
               <Button variant="ghost" asChild>
                 <Link to="/search"><Search className="mr-2 h-4 w-4" />Find a ride</Link>
               </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/groups"><Users className="mr-2 h-4 w-4" />Groups</Link>
+              </Button>
+
               {role === "driver" && (
                 <>
                   <Button variant="ghost" asChild>

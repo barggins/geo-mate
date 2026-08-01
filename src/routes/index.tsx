@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/Logo";
 import { RouteHero } from "@/components/RouteHero";
+import howItWorks from "@/assets/liftclub-how-it-works.png.asset.json";
+
 import {
   MapPin, Users, Shield, Zap, MessageCircle, Star, ArrowRight, Check, Radio,
 } from "lucide-react";
@@ -145,7 +147,28 @@ function Landing() {
         </div>
       </section>
 
+      {/* HOW LIFTCLUB WORKS — illustrated walkthrough */}
+      <section className="py-20">
+        <div className="mx-auto max-w-6xl px-4">
+          <p className="font-mono-num text-[11px] uppercase tracking-widest text-[color:var(--steel)]">/ 03 · The walkthrough</p>
+          <h2 className="mt-2 font-display text-3xl tracking-tight text-[color:var(--asphalt)] md:text-4xl">
+            From posting a trip to riding together.
+          </h2>
+          <figure className="mt-8 overflow-hidden rounded-2xl border border-[color:var(--asphalt)]/10 bg-white shadow-sm">
+            <img
+              src={howItWorks.url}
+              alt="How LiftClub works: drivers set a route, publish it and accept riders; riders search, choose a ride and request a seat; safe, affordable, eco-friendly community travel."
+              width={1404}
+              height={1064}
+              loading="lazy"
+              className="w-full"
+            />
+          </figure>
+        </div>
+      </section>
+
       {/* PRICING removed — product is still in development */}
+
 
 
       {/* CTA */}

@@ -23,10 +23,12 @@ import { Route as AuthenticatedRidesLogRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPostRideRouteImport } from './routes/_authenticated/post-ride'
 import { Route as AuthenticatedLiveMapRouteImport } from './routes/_authenticated/live-map'
+import { Route as AuthenticatedGroupsRouteImport } from './routes/_authenticated/groups'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedBecomeDriverRouteImport } from './routes/_authenticated/become-driver'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedRideIdRouteImport } from './routes/_authenticated/ride.$id'
+import { Route as AuthenticatedGroupIdRouteImport } from './routes/_authenticated/group.$id'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -98,6 +100,11 @@ const AuthenticatedLiveMapRoute = AuthenticatedLiveMapRouteImport.update({
   path: '/live-map',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedGroupsRoute = AuthenticatedGroupsRouteImport.update({
+  id: '/groups',
+  path: '/groups',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -119,6 +126,11 @@ const AuthenticatedRideIdRoute = AuthenticatedRideIdRouteImport.update({
   path: '/ride/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedGroupIdRoute = AuthenticatedGroupIdRouteImport.update({
+  id: '/group/$id',
+  path: '/group/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -129,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/become-driver': typeof AuthenticatedBecomeDriverRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/groups': typeof AuthenticatedGroupsRoute
   '/live-map': typeof AuthenticatedLiveMapRoute
   '/post-ride': typeof AuthenticatedPostRideRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -137,6 +150,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/sos': typeof AuthenticatedSosRoute
   '/verify-identity': typeof AuthenticatedVerifyIdentityRoute
+  '/group/$id': typeof AuthenticatedGroupIdRoute
   '/ride/$id': typeof AuthenticatedRideIdRoute
 }
 export interface FileRoutesByTo {
@@ -148,6 +162,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/become-driver': typeof AuthenticatedBecomeDriverRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/groups': typeof AuthenticatedGroupsRoute
   '/live-map': typeof AuthenticatedLiveMapRoute
   '/post-ride': typeof AuthenticatedPostRideRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -156,6 +171,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/sos': typeof AuthenticatedSosRoute
   '/verify-identity': typeof AuthenticatedVerifyIdentityRoute
+  '/group/$id': typeof AuthenticatedGroupIdRoute
   '/ride/$id': typeof AuthenticatedRideIdRoute
 }
 export interface FileRoutesById {
@@ -169,6 +185,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/become-driver': typeof AuthenticatedBecomeDriverRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/groups': typeof AuthenticatedGroupsRoute
   '/_authenticated/live-map': typeof AuthenticatedLiveMapRoute
   '/_authenticated/post-ride': typeof AuthenticatedPostRideRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -177,6 +194,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/sos': typeof AuthenticatedSosRoute
   '/_authenticated/verify-identity': typeof AuthenticatedVerifyIdentityRoute
+  '/_authenticated/group/$id': typeof AuthenticatedGroupIdRoute
   '/_authenticated/ride/$id': typeof AuthenticatedRideIdRoute
 }
 export interface FileRouteTypes {
@@ -190,6 +208,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/become-driver'
     | '/dashboard'
+    | '/groups'
     | '/live-map'
     | '/post-ride'
     | '/profile'
@@ -198,6 +217,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sos'
     | '/verify-identity'
+    | '/group/$id'
     | '/ride/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -209,6 +229,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/become-driver'
     | '/dashboard'
+    | '/groups'
     | '/live-map'
     | '/post-ride'
     | '/profile'
@@ -217,6 +238,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sos'
     | '/verify-identity'
+    | '/group/$id'
     | '/ride/$id'
   id:
     | '__root__'
@@ -229,6 +251,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/become-driver'
     | '/_authenticated/dashboard'
+    | '/_authenticated/groups'
     | '/_authenticated/live-map'
     | '/_authenticated/post-ride'
     | '/_authenticated/profile'
@@ -237,6 +260,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/sos'
     | '/_authenticated/verify-identity'
+    | '/_authenticated/group/$id'
     | '/_authenticated/ride/$id'
   fileRoutesById: FileRoutesById
 }
@@ -349,6 +373,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLiveMapRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/groups': {
+      id: '/_authenticated/groups'
+      path: '/groups'
+      fullPath: '/groups'
+      preLoaderRoute: typeof AuthenticatedGroupsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -377,6 +408,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRideIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/group/$id': {
+      id: '/_authenticated/group/$id'
+      path: '/group/$id'
+      fullPath: '/group/$id'
+      preLoaderRoute: typeof AuthenticatedGroupIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -384,6 +422,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedBecomeDriverRoute: typeof AuthenticatedBecomeDriverRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedGroupsRoute: typeof AuthenticatedGroupsRoute
   AuthenticatedLiveMapRoute: typeof AuthenticatedLiveMapRoute
   AuthenticatedPostRideRoute: typeof AuthenticatedPostRideRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
@@ -392,6 +431,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSosRoute: typeof AuthenticatedSosRoute
   AuthenticatedVerifyIdentityRoute: typeof AuthenticatedVerifyIdentityRoute
+  AuthenticatedGroupIdRoute: typeof AuthenticatedGroupIdRoute
   AuthenticatedRideIdRoute: typeof AuthenticatedRideIdRoute
 }
 
@@ -399,6 +439,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedBecomeDriverRoute: AuthenticatedBecomeDriverRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedGroupsRoute: AuthenticatedGroupsRoute,
   AuthenticatedLiveMapRoute: AuthenticatedLiveMapRoute,
   AuthenticatedPostRideRoute: AuthenticatedPostRideRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
@@ -407,6 +448,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSosRoute: AuthenticatedSosRoute,
   AuthenticatedVerifyIdentityRoute: AuthenticatedVerifyIdentityRoute,
+  AuthenticatedGroupIdRoute: AuthenticatedGroupIdRoute,
   AuthenticatedRideIdRoute: AuthenticatedRideIdRoute,
 }
 
