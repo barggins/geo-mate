@@ -28,6 +28,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedBecomeDriverRouteImport } from './routes/_authenticated/become-driver'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedRideIdRouteImport } from './routes/_authenticated/ride.$id'
+import { Route as AuthenticatedGroupIdRouteImport } from './routes/_authenticated/group.$id'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -125,6 +126,11 @@ const AuthenticatedRideIdRoute = AuthenticatedRideIdRouteImport.update({
   path: '/ride/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedGroupIdRoute = AuthenticatedGroupIdRouteImport.update({
+  id: '/group/$id',
+  path: '/group/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -144,6 +150,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/sos': typeof AuthenticatedSosRoute
   '/verify-identity': typeof AuthenticatedVerifyIdentityRoute
+  '/group/$id': typeof AuthenticatedGroupIdRoute
   '/ride/$id': typeof AuthenticatedRideIdRoute
 }
 export interface FileRoutesByTo {
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/sos': typeof AuthenticatedSosRoute
   '/verify-identity': typeof AuthenticatedVerifyIdentityRoute
+  '/group/$id': typeof AuthenticatedGroupIdRoute
   '/ride/$id': typeof AuthenticatedRideIdRoute
 }
 export interface FileRoutesById {
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/sos': typeof AuthenticatedSosRoute
   '/_authenticated/verify-identity': typeof AuthenticatedVerifyIdentityRoute
+  '/_authenticated/group/$id': typeof AuthenticatedGroupIdRoute
   '/_authenticated/ride/$id': typeof AuthenticatedRideIdRoute
 }
 export interface FileRouteTypes {
@@ -208,6 +217,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sos'
     | '/verify-identity'
+    | '/group/$id'
     | '/ride/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -228,6 +238,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sos'
     | '/verify-identity'
+    | '/group/$id'
     | '/ride/$id'
   id:
     | '__root__'
@@ -249,6 +260,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/sos'
     | '/_authenticated/verify-identity'
+    | '/_authenticated/group/$id'
     | '/_authenticated/ride/$id'
   fileRoutesById: FileRoutesById
 }
@@ -396,6 +408,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRideIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/group/$id': {
+      id: '/_authenticated/group/$id'
+      path: '/group/$id'
+      fullPath: '/group/$id'
+      preLoaderRoute: typeof AuthenticatedGroupIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -412,6 +431,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSosRoute: typeof AuthenticatedSosRoute
   AuthenticatedVerifyIdentityRoute: typeof AuthenticatedVerifyIdentityRoute
+  AuthenticatedGroupIdRoute: typeof AuthenticatedGroupIdRoute
   AuthenticatedRideIdRoute: typeof AuthenticatedRideIdRoute
 }
 
@@ -428,6 +448,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSosRoute: AuthenticatedSosRoute,
   AuthenticatedVerifyIdentityRoute: AuthenticatedVerifyIdentityRoute,
+  AuthenticatedGroupIdRoute: AuthenticatedGroupIdRoute,
   AuthenticatedRideIdRoute: AuthenticatedRideIdRoute,
 }
 
