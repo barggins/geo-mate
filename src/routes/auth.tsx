@@ -121,8 +121,8 @@ function SignUpForm() {
           options: { data: { name, role }, emailRedirectTo: window.location.origin + "/dashboard" },
         });
         setBusy(false);
-        if (error) toast.error(error.message);
-        else toast.success("Account created! Check your inbox and click the confirmation link before signing in.", { duration: 8000 });
+        if (error) toast.error(error.message, { duration: 8000 });
+        else toast.success("Account created — you're signed in. Submit your KYC documents so an admin can verify you.", { duration: 8000 });
       }}
     >
       <div className="space-y-1.5">
