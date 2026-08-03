@@ -27,7 +27,7 @@ function RidePage() {
   const [driver, setDriver] = useState<any>(null);
   const [requests, setRequests] = useState<any[]>([]);
   const [myRequest, setMyRequest] = useState<any>(null);
-  const [reviews2, setReviews2] = useState<any[]>([]);
+  const [liveLocInit] = useState<null>(null);
   const [liveLoc, setLiveLoc] = useState<{ lat: number; lng: number } | null>(null);
   const [reviews, setReviews] = useState<any[]>([]);
 
