@@ -84,8 +84,9 @@ function SignInForm() {
       }}
     >
       <div className="rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-900">
-        New accounts must confirm their email address (check your inbox) before signing in.
+        You can sign in immediately after registering. Your account is then <strong>verified by a LiftClub admin</strong> after you submit your KYC documents.
       </div>
+
       <div className="space-y-1.5">
         <Label htmlFor="si-email">Email</Label>
         <Input id="si-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
