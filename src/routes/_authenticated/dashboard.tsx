@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Search, MapPin, Clock, Users, Bell, ShieldCheck } from "lucide-react";
 import { format } from "date-fns";
+import { useVerification, canPostRide, canRequestSeat } from "@/lib/useVerification";
+import { NextStepsPanel } from "@/components/NextStepsPanel";
+
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -19,7 +22,11 @@ function Dashboard() {
   const [incomingRequests, setIncomingRequests] = useState<any[]>([]);
   const [myRequests, setMyRequests] = useState<any[]>([]);
   const [profile, setProfile] = useState<any>(null);
-  const role: "rider" | "driver" = profile?.role ?? "rider";
+  const verification = useVerification(user?.id);
+  const role: "rider" | "driver" = verification.role ?? profile?.role ?? "rider";
+  const postRide = canPostRide(verification);
+  const seatRequest = canRequestSeat(verification);
+
 
   useEffect(() => {
     if (!user) return;
@@ -82,18 +89,41 @@ function Dashboard() {
               {role === "driver" ? "Your rides, requests and earnings, at a glance." : "Find rides, track requests, ride safely."}
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button asChild variant="outline"><Link to="/search"><Search className="mr-2 h-4 w-4" />Find a ride</Link></Button>
             {role === "driver" && (
-              <Button asChild className="brand-gradient text-white"><Link to="/post-ride"><Plus className="mr-2 h-4 w-4" />Post a ride</Link></Button>
+              postRide.allowed ? (
+                <Button asChild className="brand-gradient text-white"><Link to="/post-ride"><Plus className="mr-2 h-4 w-4" />Post a ride</Link></Button>
+              ) : (
+                <Button asChild variant="outline" title={postRide.reason}>
+                  <Link to="/become-driver"><ShieldCheck className="mr-2 h-4 w-4" />Complete driver KYC</Link>
+                </Button>
+              )
             )}
-            {role === "rider" && !profile?.verified && (
+            {role === "rider" && !verification.verified && (
               <Button asChild className="brand-gradient text-white"><Link to="/verify-identity"><ShieldCheck className="mr-2 h-4 w-4" />Verify identity</Link></Button>
             )}
           </div>
         </div>
 
+        {!postRide.allowed && role === "driver" && (
+          <div className="mb-6 rounded-lg border border-amber-400/30 bg-amber-500/10 p-3 text-sm text-amber-200">
+            {postRide.reason}
+          </div>
+        )}
+        {role === "rider" && !seatRequest.allowed && (
+          <div className="mb-6 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+            {seatRequest.reason}
+          </div>
+        )}
+
+
+
         <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-3">
+            <NextStepsPanel v={verification} dark={role === "driver"} />
+          </div>
+
           {role === "driver" && (
             <Card className={`p-5 lg:col-span-2 ${theme.surface} animate-fade-in`}>
               <div className="mb-4 flex items-center justify-between">

@@ -11,9 +11,9 @@ import LeafletMap, { carIcon, pickupIcon } from "@/components/LeafletMap";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import {
-  Loader2, MapPin, Clock, Users, Star, Send, Play, Square, Radio, MessageCircle, Check, X,
-} from "lucide-react";
+import { Loader2, MapPin, Clock, Users, Star, Play, Square, Radio, Check, X } from "lucide-react";
+import { BookingChat } from "@/components/BookingChat";
+
 import { format } from "date-fns";
 
 export const Route = createFileRoute("/_authenticated/ride/$id")({
@@ -27,7 +27,7 @@ function RidePage() {
   const [driver, setDriver] = useState<any>(null);
   const [requests, setRequests] = useState<any[]>([]);
   const [myRequest, setMyRequest] = useState<any>(null);
-  const [messages, setMessages] = useState<any[]>([]);
+  
   const [liveLoc, setLiveLoc] = useState<{ lat: number; lng: number } | null>(null);
   const [reviews, setReviews] = useState<any[]>([]);
 
@@ -62,9 +62,6 @@ function RidePage() {
       .channel(`ride-${id}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "ride_requests", filter: `ride_id=eq.${id}` }, load)
       .on("postgres_changes", { event: "*", schema: "public", table: "rides", filter: `id=eq.${id}` }, load)
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `ride_id=eq.${id}` }, (payload) => {
-        setMessages((m) => [...m, payload.new as any]);
-      })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "locations", filter: `ride_id=eq.${id}` }, (payload) => {
         const n = payload.new as any;
         setLiveLoc({ lat: n.lat, lng: n.lng });
@@ -73,11 +70,6 @@ function RidePage() {
     return () => { supabase.removeChannel(ch); };
   }, [id, user]);
 
-  // messages (only after we know we can read them)
-  useEffect(() => {
-    if (!ride || !user) return;
-    supabase.from("messages").select("*").eq("ride_id", id).order("created_at", { ascending: true }).then(({ data }) => setMessages(data ?? []));
-  }, [ride, user, id]);
 
   if (!ride) {
     return (
@@ -205,9 +197,13 @@ function RidePage() {
 
           {/* Chat + reviews */}
           <div className="space-y-4">
-            {(isDriver || myRequest?.status === "accepted") && (
-              <Chat rideId={id} userId={user!.id} messages={messages} />
-            )}
+            <BookingChat
+              rideId={id}
+              userId={user!.id}
+              isDriver={!!isDriver}
+              bookings={isDriver ? requests : myRequest ? [myRequest] : []}
+            />
+
             {ride.status === "completed" && !isDriver && myRequest?.status === "accepted" && (
               <ReviewForm rideId={id} fromUser={user!.id} toUser={ride.driver_id} existing={reviews.find((rv) => rv.from_user === user!.id)} />
             )}
@@ -327,37 +323,6 @@ function RiderRequestPanel({ ride, myRequest, userId, onChange }: { ride: any; m
   );
 }
 
-function Chat({ rideId, userId, messages }: { rideId: string; userId: string; messages: any[] }) {
-  const [text, setText] = useState("");
-  const scrollRef = useRef<HTMLDivElement>(null);
-  useEffect(() => { scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight }); }, [messages]);
-
-  return (
-    <Card className="flex h-[460px] flex-col p-0">
-      <div className="border-b p-4"><h3 className="flex items-center gap-2 font-semibold"><MessageCircle className="h-4 w-4" />Ride chat</h3></div>
-      <div ref={scrollRef} className="flex-1 space-y-2 overflow-auto p-4">
-        {messages.length === 0 && <p className="text-center text-sm text-muted-foreground">No messages yet — say hi 👋</p>}
-        {messages.map((m) => (
-          <div key={m.id} className={`flex ${m.sender_id === userId ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${m.sender_id === userId ? "brand-gradient text-white" : "bg-secondary"}`}>
-              {m.body}
-            </div>
-          </div>
-        ))}
-      </div>
-      <form className="flex gap-2 border-t p-3" onSubmit={async (e) => {
-        e.preventDefault();
-        if (!text.trim()) return;
-        const body = text; setText("");
-        const { error } = await supabase.from("messages").insert({ ride_id: rideId, sender_id: userId, body });
-        if (error) toast.error(error.message);
-      }}>
-        <Input placeholder="Type a message…" value={text} onChange={(e) => setText(e.target.value)} />
-        <Button type="submit" size="icon" className="brand-gradient text-white"><Send className="h-4 w-4" /></Button>
-      </form>
-    </Card>
-  );
-}
 
 function ReviewForm({ rideId, fromUser, toUser, existing }: { rideId: string; fromUser: string; toUser: string; existing: any }) {
   const [rating, setRating] = useState(existing?.rating ?? 5);
