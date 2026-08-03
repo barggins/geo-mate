@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Search, MapPin, Clock, Users, Bell, ShieldCheck } from "lucide-react";
 import { format } from "date-fns";
+import { useVerification, canPostRide, canRequestSeat } from "@/lib/useVerification";
+import { NextStepsPanel } from "@/components/NextStepsPanel";
+
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -19,7 +22,11 @@ function Dashboard() {
   const [incomingRequests, setIncomingRequests] = useState<any[]>([]);
   const [myRequests, setMyRequests] = useState<any[]>([]);
   const [profile, setProfile] = useState<any>(null);
-  const role: "rider" | "driver" = profile?.role ?? "rider";
+  const verification = useVerification(user?.id);
+  const role: "rider" | "driver" = verification.role ?? profile?.role ?? "rider";
+  const postRide = canPostRide(verification);
+  const seatRequest = canRequestSeat(verification);
+
 
   useEffect(() => {
     if (!user) return;
