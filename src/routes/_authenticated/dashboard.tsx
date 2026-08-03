@@ -110,7 +110,7 @@ function Dashboard() {
           </div>
         )}
 
-        </div>
+
 
         <div className="grid gap-6 lg:grid-cols-3">
           {role === "driver" && (
