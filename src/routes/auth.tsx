@@ -51,8 +51,7 @@ function AuthPage() {
           <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
             <div className="h-px flex-1 bg-border" /> OR <div className="h-px flex-1 bg-border" />
           </div>
-          <GoogleButton />
-          <PhoneSection />
+
         </Card>
         <p className="mt-4 text-center text-xs text-muted-foreground">
           By continuing you agree to LiftClub's terms and privacy policy.
