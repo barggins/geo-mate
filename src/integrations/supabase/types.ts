@@ -256,6 +256,7 @@ export type Database = {
           body: string
           created_at: string
           id: string
+          request_id: string | null
           ride_id: string
           sender_id: string
         }
@@ -263,6 +264,7 @@ export type Database = {
           body: string
           created_at?: string
           id?: string
+          request_id?: string | null
           ride_id: string
           sender_id: string
         }
@@ -270,10 +272,18 @@ export type Database = {
           body?: string
           created_at?: string
           id?: string
+          request_id?: string | null
           ride_id?: string
           sender_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "messages_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "ride_requests"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "messages_ride_id_fkey"
             columns: ["ride_id"]
@@ -508,11 +518,15 @@ export type Database = {
       }
       ride_requests: {
         Row: {
+          amount_zar: number | null
           created_at: string
           dropoff_label: string | null
           dropoff_point: unknown
           id: string
           message: string | null
+          paid_at: string | null
+          payment_reference: string | null
+          payment_status: Database["public"]["Enums"]["payment_status"]
           pickup_label: string | null
           pickup_point: unknown
           ride_id: string
@@ -520,11 +534,15 @@ export type Database = {
           status: Database["public"]["Enums"]["request_status"]
         }
         Insert: {
+          amount_zar?: number | null
           created_at?: string
           dropoff_label?: string | null
           dropoff_point?: unknown
           id?: string
           message?: string | null
+          paid_at?: string | null
+          payment_reference?: string | null
+          payment_status?: Database["public"]["Enums"]["payment_status"]
           pickup_label?: string | null
           pickup_point?: unknown
           ride_id: string
@@ -532,11 +550,15 @@ export type Database = {
           status?: Database["public"]["Enums"]["request_status"]
         }
         Update: {
+          amount_zar?: number | null
           created_at?: string
           dropoff_label?: string | null
           dropoff_point?: unknown
           id?: string
           message?: string | null
+          paid_at?: string | null
+          payment_reference?: string | null
+          payment_status?: Database["public"]["Enums"]["payment_status"]
           pickup_label?: string | null
           pickup_point?: unknown
           ride_id?: string
@@ -929,11 +951,15 @@ export type Database = {
       accept_ride_request: {
         Args: { p_request_id: string }
         Returns: {
+          amount_zar: number | null
           created_at: string
           dropoff_label: string | null
           dropoff_point: unknown
           id: string
           message: string | null
+          paid_at: string | null
+          payment_reference: string | null
+          payment_status: Database["public"]["Enums"]["payment_status"]
           pickup_label: string | null
           pickup_point: unknown
           ride_id: string
@@ -985,6 +1011,10 @@ export type Database = {
             }
             Returns: string
           }
+      can_access_booking_thread: {
+        Args: { _request_id: string }
+        Returns: boolean
+      }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:
         | {
@@ -1811,6 +1841,12 @@ export type Database = {
         | "ride_cancelled"
         | "ride_started"
         | "ride_completed"
+      payment_status:
+        | "unpaid"
+        | "awaiting_payment"
+        | "paid"
+        | "failed"
+        | "refunded"
       request_status: "pending" | "accepted" | "rejected" | "cancelled"
       ride_status: "scheduled" | "in_progress" | "completed" | "cancelled"
       user_role: "rider" | "driver"
@@ -1963,6 +1999,13 @@ export const Constants = {
         "ride_cancelled",
         "ride_started",
         "ride_completed",
+      ],
+      payment_status: [
+        "unpaid",
+        "awaiting_payment",
+        "paid",
+        "failed",
+        "refunded",
       ],
       request_status: ["pending", "accepted", "rejected", "cancelled"],
       ride_status: ["scheduled", "in_progress", "completed", "cancelled"],
