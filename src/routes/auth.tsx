@@ -76,8 +76,8 @@ function SignInForm() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         setBusy(false);
         if (error) {
-          const msg = /confirm|not confirmed|verify/i.test(error.message)
-            ? "Please verify your email first. Check your inbox for the confirmation link before signing in."
+          const msg = /invalid login/i.test(error.message)
+            ? "Wrong email or password. Check both and try again."
             : error.message;
           toast.error(msg, { duration: 8000 });
         } else toast.success("Welcome back!");
