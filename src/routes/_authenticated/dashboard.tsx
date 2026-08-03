@@ -82,15 +82,34 @@ function Dashboard() {
               {role === "driver" ? "Your rides, requests and earnings, at a glance." : "Find rides, track requests, ride safely."}
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button asChild variant="outline"><Link to="/search"><Search className="mr-2 h-4 w-4" />Find a ride</Link></Button>
             {role === "driver" && (
-              <Button asChild className="brand-gradient text-white"><Link to="/post-ride"><Plus className="mr-2 h-4 w-4" />Post a ride</Link></Button>
+              postRide.allowed ? (
+                <Button asChild className="brand-gradient text-white"><Link to="/post-ride"><Plus className="mr-2 h-4 w-4" />Post a ride</Link></Button>
+              ) : (
+                <Button asChild variant="outline" title={postRide.reason}>
+                  <Link to="/become-driver"><ShieldCheck className="mr-2 h-4 w-4" />Complete driver KYC</Link>
+                </Button>
+              )
             )}
-            {role === "rider" && !profile?.verified && (
+            {role === "rider" && !verification.verified && (
               <Button asChild className="brand-gradient text-white"><Link to="/verify-identity"><ShieldCheck className="mr-2 h-4 w-4" />Verify identity</Link></Button>
             )}
           </div>
+        </div>
+
+        {!postRide.allowed && role === "driver" && (
+          <div className="mb-6 rounded-lg border border-amber-400/30 bg-amber-500/10 p-3 text-sm text-amber-200">
+            {postRide.reason}
+          </div>
+        )}
+        {role === "rider" && !seatRequest.allowed && (
+          <div className="mb-6 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+            {seatRequest.reason}
+          </div>
+        )}
+
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
