@@ -4,7 +4,7 @@ import { Logo } from "./Logo";
 import { Button } from "./ui/button";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, Menu, Search, Plus, LayoutDashboard, User as UserIcon, MapPin, AlertTriangle, Settings as SettingsIcon, ShieldCheck, Mail, Users } from "lucide-react";
+import { LogOut, Menu, Search, Plus, LayoutDashboard, User as UserIcon, MapPin, AlertTriangle, Settings as SettingsIcon, ShieldCheck, Mail, Users, Fuel } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
