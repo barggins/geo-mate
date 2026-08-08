@@ -85,8 +85,8 @@
   --card-foreground: #F6F5F1;
   --popover: #171D26;
   --popover-foreground: #F6F5F1;
-  --primary: #FFB020;
-  --primary-foreground: #10151C;
+  --primary: #4C8DFF;
+  --primary-foreground: #06090D;
   --success: #1F8A70;
   --success-foreground: #F6F5F1;
   --secondary: #1E2530;
@@ -99,7 +99,7 @@
   --destructive-foreground: #F6F5F1;
   --border: rgba(255,255,255,0.10);
   --input: rgba(255,255,255,0.14);
-  --ring: #FFB020;
+  --ring: #4C8DFF;
   --sky-tint: #171D26;
 }
 
@@ -128,7 +128,7 @@
 /* Kept for legacy call sites — solid amber, no gradient */
 .brand-gradient {
   background-color: var(--signal);
-  color: var(--asphalt);
+  color: #FFFFFF;
 }
 .brand-gradient-text {
   color: var(--signal);
