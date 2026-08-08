@@ -48,34 +48,35 @@
 
 :root {
   --radius: 0.5rem;
-  --asphalt: #10151C;
-  --concrete: #F6F5F1;
-  --signal: #FFB020;
+  --asphalt: #0B0F14;
+  --concrete: #F4F7FB;
+  --signal: #1D6BFF;
   --transit: #1F8A70;
   --steel: #5B6472;
-  --background: #F6F5F1;
-  --foreground: #10151C;
+  --background: #F4F7FB;
+  --foreground: #0B0F14;
   --card: #FFFFFF;
-  --card-foreground: #10151C;
+  --card-foreground: #0B0F14;
   --popover: #FFFFFF;
-  --popover-foreground: #10151C;
-  --primary: #FFB020;
-  --primary-foreground: #10151C;
+  --popover-foreground: #0B0F14;
+  --primary: #1D6BFF;
+  --primary-foreground: #FFFFFF;
   --success: #1F8A70;
   --success-foreground: #FFFFFF;
-  --secondary: #ECEAE3;
-  --secondary-foreground: #10151C;
-  --muted: #ECEAE3;
+  --secondary: #E6EDF9;
+  --secondary-foreground: #0B0F14;
+  --muted: #E6EDF9;
   --muted-foreground: #5B6472;
-  --accent: #ECEAE3;
-  --accent-foreground: #10151C;
+  --accent: #E6EDF9;
+  --accent-foreground: #0B0F14;
   --destructive: #C0392B;
   --destructive-foreground: #FFFFFF;
-  --border: #E1DED5;
-  --input: #E1DED5;
-  --ring: #FFB020;
-  --sky-tint: #EFEEE8;
+  --border: #D8E1EF;
+  --input: #D8E1EF;
+  --ring: #1D6BFF;
+  --sky-tint: #EAF1FD;
 }
+
 
 .dark {
   --background: #10151C;
@@ -84,8 +85,8 @@
   --card-foreground: #F6F5F1;
   --popover: #171D26;
   --popover-foreground: #F6F5F1;
-  --primary: #FFB020;
-  --primary-foreground: #10151C;
+  --primary: #4C8DFF;
+  --primary-foreground: #06090D;
   --success: #1F8A70;
   --success-foreground: #F6F5F1;
   --secondary: #1E2530;
@@ -98,7 +99,7 @@
   --destructive-foreground: #F6F5F1;
   --border: rgba(255,255,255,0.10);
   --input: rgba(255,255,255,0.14);
-  --ring: #FFB020;
+  --ring: #4C8DFF;
   --sky-tint: #171D26;
 }
 
@@ -127,7 +128,7 @@
 /* Kept for legacy call sites — solid amber, no gradient */
 .brand-gradient {
   background-color: var(--signal);
-  color: var(--asphalt);
+  color: #FFFFFF;
 }
 .brand-gradient-text {
   color: var(--signal);

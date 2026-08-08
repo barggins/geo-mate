@@ -67,40 +67,67 @@ function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [resetting, setResetting] = useState(false);
   return (
     <form
       className="space-y-3"
       onSubmit={async (e) => {
         e.preventDefault();
         setBusy(true);
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({
+          email: email.trim().toLowerCase(),
+          password,
+        });
         setBusy(false);
         if (error) {
-          const msg = /invalid login/i.test(error.message)
-            ? "Wrong email or password. Check both and try again."
-            : error.message;
+          const m = error.message.toLowerCase();
+          const msg = m.includes("email not confirmed")
+            ? "This account still needs confirming. Use 'Forgot password' to get a fresh link, or contact support."
+            : m.includes("invalid login")
+              ? "Wrong email or password. Check both and try again."
+              : m.includes("rate")
+                ? "Too many attempts. Wait a minute and try again."
+                : error.message;
           toast.error(msg, { duration: 8000 });
         } else toast.success("Welcome back!");
       }}
     >
-      <div className="rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-900">
+      <div className="rounded-md border border-[color:var(--signal)]/30 bg-[color:var(--sky-tint)] p-2 text-xs">
         You can sign in immediately after registering. Your account is then <strong>verified by a LiftClub admin</strong> after you submit your KYC documents.
       </div>
 
       <div className="space-y-1.5">
         <Label htmlFor="si-email">Email</Label>
-        <Input id="si-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input id="si-email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="si-pw">Password</Label>
-        <Input id="si-pw" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Input id="si-pw" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
-      <Button type="submit" className="w-full brand-gradient text-white" disabled={busy}>
+      <Button type="submit" className="w-full brand-gradient" disabled={busy}>
         {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Mail className="mr-2 h-4 w-4" /> Sign in</>}
       </Button>
+      <button
+        type="button"
+        disabled={resetting}
+        className="w-full text-center text-xs text-muted-foreground underline"
+        onClick={async () => {
+          if (!email) { toast.error("Enter your email above first, then tap 'Forgot password'."); return; }
+          setResetting(true);
+          const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+            redirectTo: `${window.location.origin}/reset-password`,
+          });
+          setResetting(false);
+          if (error) toast.error(error.message, { duration: 8000 });
+          else toast.success("If that email exists, a reset link is on its way.", { duration: 8000 });
+        }}
+      >
+        {resetting ? "Sending reset link…" : "Forgot password?"}
+      </button>
     </form>
   );
 }
+
 
 function SignUpForm() {
   const [name, setName] = useState("");
