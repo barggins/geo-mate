@@ -75,6 +75,12 @@ export function Header() {
           ) : (
             <>
               <Button variant="ghost" asChild>
+                <Link to="/liftclubs"><Users className="mr-2 h-4 w-4" />Lift clubs & rides</Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/fuel-calculator"><Fuel className="mr-2 h-4 w-4" />Fuel calculator</Link>
+              </Button>
+              <Button variant="ghost" asChild>
                 <Link to="/contact"><Mail className="mr-2 h-4 w-4" />Contact us</Link>
               </Button>
               <Button variant="ghost" asChild>
@@ -82,6 +88,7 @@ export function Header() {
               </Button>
             </>
           )}
+
         </nav>
 
         <div className="flex items-center gap-2">
