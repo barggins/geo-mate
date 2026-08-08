@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as LiftclubsRouteImport } from './routes/liftclubs'
 import { Route as FuelCalculatorRouteImport } from './routes/fuel-calculator'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -39,6 +40,11 @@ const TermsRoute = TermsRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiftclubsRoute = LiftclubsRouteImport.update({
+  id: '/liftclubs',
+  path: '/liftclubs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FuelCalculatorRoute = FuelCalculatorRouteImport.update({
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/fuel-calculator': typeof FuelCalculatorRoute
+  '/liftclubs': typeof LiftclubsRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -165,6 +172,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/fuel-calculator': typeof FuelCalculatorRoute
+  '/liftclubs': typeof LiftclubsRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -189,6 +197,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/fuel-calculator': typeof FuelCalculatorRoute
+  '/liftclubs': typeof LiftclubsRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -213,6 +222,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/fuel-calculator'
+    | '/liftclubs'
     | '/privacy'
     | '/terms'
     | '/admin'
@@ -235,6 +245,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/fuel-calculator'
+    | '/liftclubs'
     | '/privacy'
     | '/terms'
     | '/admin'
@@ -258,6 +269,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/fuel-calculator'
+    | '/liftclubs'
     | '/privacy'
     | '/terms'
     | '/_authenticated/admin'
@@ -282,6 +294,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   FuelCalculatorRoute: typeof FuelCalculatorRoute
+  LiftclubsRoute: typeof LiftclubsRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
 }
@@ -300,6 +313,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/liftclubs': {
+      id: '/liftclubs'
+      path: '/liftclubs'
+      fullPath: '/liftclubs'
+      preLoaderRoute: typeof LiftclubsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fuel-calculator': {
@@ -481,6 +501,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   FuelCalculatorRoute: FuelCalculatorRoute,
+  LiftclubsRoute: LiftclubsRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
 }
