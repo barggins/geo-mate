@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          target_id: string | null
+          target_table: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          target_id?: string | null
+          target_table?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          target_id?: string | null
+          target_table?: string | null
+        }
+        Relationships: []
+      }
       driver_applications: {
         Row: {
           admin_notes: string | null
@@ -80,6 +110,45 @@ export type Database = {
           vehicle_plate?: string | null
           vehicle_reg_url?: string | null
           vehicle_year?: number | null
+        }
+        Relationships: []
+      }
+      driver_payment_details: {
+        Row: {
+          account_holder: string
+          account_number: string
+          bank_name: string
+          branch_code: string | null
+          created_at: string
+          driver_id: string
+          id: string
+          is_verified: boolean
+          reference_hint: string | null
+          updated_at: string
+        }
+        Insert: {
+          account_holder: string
+          account_number: string
+          bank_name: string
+          branch_code?: string | null
+          created_at?: string
+          driver_id: string
+          id?: string
+          is_verified?: boolean
+          reference_hint?: string | null
+          updated_at?: string
+        }
+        Update: {
+          account_holder?: string
+          account_number?: string
+          bank_name?: string
+          branch_code?: string | null
+          created_at?: string
+          driver_id?: string
+          id?: string
+          is_verified?: boolean
+          reference_hint?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -374,6 +443,88 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_disputes: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          id: string
+          raised_by: string
+          reason: string
+          request_id: string
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          raised_by: string
+          reason: string
+          request_id: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          raised_by?: string
+          reason?: string
+          request_id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_disputes_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "ride_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_proofs: {
+        Row: {
+          amount_zar: number | null
+          created_at: string
+          file_url: string
+          id: string
+          note: string | null
+          request_id: string
+          uploaded_by: string
+        }
+        Insert: {
+          amount_zar?: number | null
+          created_at?: string
+          file_url: string
+          id?: string
+          note?: string | null
+          request_id: string
+          uploaded_by: string
+        }
+        Update: {
+          amount_zar?: number | null
+          created_at?: string
+          file_url?: string
+          id?: string
+          note?: string | null
+          request_id?: string
+          uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_proofs_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "ride_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profile_private: {
         Row: {
           created_at: string
@@ -525,6 +676,8 @@ export type Database = {
           id: string
           message: string | null
           paid_at: string | null
+          payment_confirmed_at: string | null
+          payment_expires_at: string | null
           payment_reference: string | null
           payment_status: Database["public"]["Enums"]["payment_status"]
           pickup_label: string | null
@@ -541,6 +694,8 @@ export type Database = {
           id?: string
           message?: string | null
           paid_at?: string | null
+          payment_confirmed_at?: string | null
+          payment_expires_at?: string | null
           payment_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
           pickup_label?: string | null
@@ -557,6 +712,8 @@ export type Database = {
           id?: string
           message?: string | null
           paid_at?: string | null
+          payment_confirmed_at?: string | null
+          payment_expires_at?: string | null
           payment_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
           pickup_label?: string | null
@@ -958,6 +1115,8 @@ export type Database = {
           id: string
           message: string | null
           paid_at: string | null
+          payment_confirmed_at: string | null
+          payment_expires_at: string | null
           payment_reference: string | null
           payment_status: Database["public"]["Enums"]["payment_status"]
           pickup_label: string | null
@@ -1011,9 +1170,17 @@ export type Database = {
             }
             Returns: string
           }
+      admin_resolve_dispute: {
+        Args: { p_dispute_id: string; p_notes?: string; p_outcome: string }
+        Returns: undefined
+      }
       can_access_booking_thread: {
         Args: { _request_id: string }
         Returns: boolean
+      }
+      confirm_payment_received: {
+        Args: { p_request_id: string }
+        Returns: undefined
       }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:
@@ -1059,6 +1226,7 @@ export type Database = {
         Returns: string
       }
       equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
+      expire_unpaid_bookings: { Args: never; Returns: number }
       geometry: { Args: { "": string }; Returns: unknown }
       geometry_above: {
         Args: { geom1: unknown; geom2: unknown }
@@ -1166,6 +1334,15 @@ export type Database = {
         Returns: boolean
       }
       is_approved_driver: { Args: { _uid: string }; Returns: boolean }
+      log_admin_action: {
+        Args: {
+          p_action: string
+          p_metadata?: Json
+          p_target_id?: string
+          p_target_table?: string
+        }
+        Returns: string
+      }
       longtransactionsenabled: { Args: never; Returns: boolean }
       populate_geometry_columns:
         | { Args: { tbl_oid: unknown; use_typmod?: boolean }; Returns: number }
@@ -1207,6 +1384,10 @@ export type Database = {
       }
       postgis_version: { Args: never; Returns: string }
       postgis_wagyu_version: { Args: never; Returns: string }
+      raise_payment_dispute: {
+        Args: { p_reason: string; p_request_id: string }
+        Returns: string
+      }
       recompute_user_rating: { Args: { _uid: string }; Returns: undefined }
       search_rides: {
         Args: {
@@ -1815,6 +1996,15 @@ export type Database = {
         Args: { geom: unknown; move: number; wrap: number }
         Returns: unknown
       }
+      submit_payment_proof: {
+        Args: {
+          p_amount?: number
+          p_file_url: string
+          p_note?: string
+          p_request_id: string
+        }
+        Returns: string
+      }
       unlockrows: { Args: { "": string }; Returns: number }
       updategeometrysrid: {
         Args: {
@@ -1847,6 +2037,9 @@ export type Database = {
         | "paid"
         | "failed"
         | "refunded"
+        | "proof_uploaded"
+        | "disputed"
+        | "expired"
       request_status: "pending" | "accepted" | "rejected" | "cancelled"
       ride_status: "scheduled" | "in_progress" | "completed" | "cancelled"
       user_role: "rider" | "driver"
@@ -2006,6 +2199,9 @@ export const Constants = {
         "paid",
         "failed",
         "refunded",
+        "proof_uploaded",
+        "disputed",
+        "expired",
       ],
       request_status: ["pending", "accepted", "rejected", "cancelled"],
       ride_status: ["scheduled", "in_progress", "completed", "cancelled"],
