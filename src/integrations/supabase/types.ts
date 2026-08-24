@@ -1847,6 +1847,9 @@ export type Database = {
         | "paid"
         | "failed"
         | "refunded"
+        | "proof_uploaded"
+        | "disputed"
+        | "expired"
       request_status: "pending" | "accepted" | "rejected" | "cancelled"
       ride_status: "scheduled" | "in_progress" | "completed" | "cancelled"
       user_role: "rider" | "driver"
@@ -2006,6 +2009,9 @@ export const Constants = {
         "paid",
         "failed",
         "refunded",
+        "proof_uploaded",
+        "disputed",
+        "expired",
       ],
       request_status: ["pending", "accepted", "rejected", "cancelled"],
       ride_status: ["scheduled", "in_progress", "completed", "cancelled"],
