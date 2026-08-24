@@ -1170,9 +1170,17 @@ export type Database = {
             }
             Returns: string
           }
+      admin_resolve_dispute: {
+        Args: { p_dispute_id: string; p_notes?: string; p_outcome: string }
+        Returns: undefined
+      }
       can_access_booking_thread: {
         Args: { _request_id: string }
         Returns: boolean
+      }
+      confirm_payment_received: {
+        Args: { p_request_id: string }
+        Returns: undefined
       }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:
@@ -1376,6 +1384,10 @@ export type Database = {
       }
       postgis_version: { Args: never; Returns: string }
       postgis_wagyu_version: { Args: never; Returns: string }
+      raise_payment_dispute: {
+        Args: { p_reason: string; p_request_id: string }
+        Returns: string
+      }
       recompute_user_rating: { Args: { _uid: string }; Returns: undefined }
       search_rides: {
         Args: {
@@ -1983,6 +1995,15 @@ export type Database = {
       st_wrapx: {
         Args: { geom: unknown; move: number; wrap: number }
         Returns: unknown
+      }
+      submit_payment_proof: {
+        Args: {
+          p_amount?: number
+          p_file_url: string
+          p_note?: string
+          p_request_id: string
+        }
+        Returns: string
       }
       unlockrows: { Args: { "": string }; Returns: number }
       updategeometrysrid: {
